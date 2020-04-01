@@ -68,12 +68,13 @@ def signupAPI():
     if 'signupCheck' in request.cookies:
         signupCookie = request.cookies["signupCheck"] # previous signup attempt - cookie should be overwritten
     number = request.form["number"]
+    if not number.isdigit():
+        return generate_popup("Your phone number was invalid, please try again.","/signup")
     username = request.form["username"]
     pass1 = request.form["password"]
     pass2 = request.form["passwordConf"]
     if pass1 != pass2:
-        error = "Your passwords did not match"
-        return redirect(url_for("/signup",error=error)) # not matching passwords
+        return generate_popup("Your passwords did not match. Please try again.","/signup")
     # generate verify token
     resp = make_response( redirect("/verify"))
     resp.set_cookie('signupCheck', 'xxxx')
