@@ -55,7 +55,7 @@ def programming():
     return redirect("/")
 
 @app.route('/time')
-def programming():
+def time():
     return str(datetime.datetime.now())
 
 
