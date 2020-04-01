@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>The Circle - Verify</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="static/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="static/css/util.css">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+</head>
+
+<body>
+    <a class="dropdown" href="/"> Home </a>
+    <a class="login" href="/login"> Login </a>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <form class="login100-form validate-form" action="/api/verify" method="POST">
+                    <span class="login100-form-title">
+						Verify Account
+					</span>
+                    <div class="text-center p-b-26">
+                        <span class="txt1 centertext">
+                            <br>
+							You should have recieved a text to {{ number }} with a verification code
+                            <br />
+                            Please enter that code below.
+                            <br /><br />
+                            If you do not get a code, <a href="mailto:danielperks14@gmail.com">send us an email here.</a>
+						</span>
+                    </div>
+
+
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" name="code">
+                        <span class="focus-input100" data-placeholder="Verification Code"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button class="login100-form-btn">
+								Submit
+							</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>The Circle - Signup</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="static/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="static/css/util.css">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+</head>
+
+<body>
+    <a class="dropdown" href="/"> Home </a>
+    <a class="login" href="/login"> Log In </a>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <form class="login100-form validate-form" action="/api/signup" method="POST">
+                    <span class="login100-form-title">
+						Sign Up
+                    </span>
+                    <br>
+                    <div class="text-center p-b-26">
+                        <span class="txt1 centertext">
+                            To create an account, enter your phone number and a password below.<br>
+                            You will recieve a verification text after submitting this form.<br>
+                            If you have an account already, click <a href="/login">here to log in.</a>
+                            <br><br>
+                            Your phone number should start with +[country code][number].
+						</span>
+                    </div>
+                    <br>
+
+
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" name="number">
+                        <span class="focus-input100" data-placeholder="Phone Number"></span>
+                    </div>
+
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" name="username">
+                        <span class="focus-input100" data-placeholder="Full Name"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <input class="input100" type="password" name="password">
+                        <span class="focus-input100" data-placeholder="Password"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+                        <input class="input100" type="password" name="passwordConf">
+                        <span class="focus-input100" data-placeholder="Confirm Password"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button class="login100-form-btn">
+								Login
+							</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/main.js"></script>
+
+</body>
+
+</html>

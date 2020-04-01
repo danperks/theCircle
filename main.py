@@ -44,6 +44,73 @@ def copy_to_clip(text,loc): # Don't use single apostophe
     "}}</script>"
     return html
     
+# ------------------------- ACCOUNTS --------------------------
+
+@app.route('/signup')
+def signup(error=None):
+    return render_template("/account/signup.html", error=error)
+
+@app.route('/verify')
+def verify():
+    number = None
+    if "number" in request.cookies:
+        number = request.cookies["number"]
+    return render_template("/account/verify.html", number=number)
+
+@app.route('/login')
+def login():
+    return render_template("/account/login.html")
+
+# ------------------------- API
+
+@app.route('/api/signup', methods=["POST"])
+def signupAPI():
+    if 'signupCheck' in request.cookies:
+        signupCookie = request.cookies["signupCheck"] # previous signup attempt - cookie should be overwritten
+    number = request.form["number"]
+    username = request.form["username"]
+    pass1 = request.form["password"]
+    pass2 = request.form["passwordConf"]
+    if pass1 != pass2:
+        error = "Your passwords did not match"
+        return redirect(url_for("/signup",error=error)) # not matching passwords
+    # generate verify token
+    resp = make_response( redirect("/verify"))
+    resp.set_cookie('signupCheck', 'xxxx')
+    resp.set_cookie('number', number)
+    return resp 
+
+@app.route('/api/verify', methods=["POST"])
+def verifyAPI():
+    print(request.cookies)
+    if 'signupCheck' in request.cookies and 'code' in request.form:
+        print("valid")
+        cookie = request.cookies["signupCheck"]
+        code = request.form["code"]
+        if cookie and code:
+            state = "valid code"
+            # add login to database - valid user
+            return generate_popup(("Valid Code: " + str(code)),"/")
+        elif cookie:
+            state = "invalid code"
+            # bad code from text
+            return generate_popup("Your code was invalid. Please check the latest text and try again.","/verify")
+        elif code:
+            state = "invalid cookie"
+            # code not from same user
+            return generate_popup(("Your signup may have timed out. Try again."),"/signup")
+        else:
+            state = "bad request"
+            # not a usual request
+            return redirect("/signup")
+
+    else:
+        return redirect("/signup")
+
+@app.route('/api/login', methods=["POST"])
+def loginAPI():
+    return render_template("/account/login.html")
+    
 # ------------------------- PAGES --------------------------
 
 @app.route('/favicon.ico')    
@@ -74,7 +141,7 @@ def index():
 
 if __name__ == '__main__':
     
-    debug = False
+    debug = True
     
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=debug)
