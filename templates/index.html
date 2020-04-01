@@ -35,37 +35,28 @@
         map = false;
 
         function initMap() {
-
             var myLatLng = {
                 lat: 52.5352881,
                 lng: -2.1847034
             };
-
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 4,
                 center: myLatLng
             });
-
             var locs = JSON.parse('{{ locations | tojson }}')
-
             for (const [key, value] of Object.entries(locs)) {
                 var lat = parseFloat(value[0], 10);
                 var lng = parseFloat(value[1], 10);
-
-                console.log(lat, lng);
-
                 var LatLng = {
                     lat,
                     lng
                 }
-
                 var marker = new google.maps.Marker({
                     position: LatLng,
                     map: map,
                     title: key
                 });
             };
-
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var pos = {
