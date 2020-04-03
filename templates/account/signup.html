@@ -53,6 +53,8 @@
                         <span class="focus-input100" data-placeholder="Confirm Password"></span>
                     </div>
 
+                    <div id="error" class="centertext" style="color: rgb(226, 0, 0);">Error: {{ error }}</div>
+
                     <div class="container-login100-form-btn">
                         <div class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>
@@ -65,6 +67,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        if ("{{ error }}" == "None") {
+            document.getElementById("error").style.display = "none";
+        }
+    </script>
 
     <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="/static/js/main.js"></script>

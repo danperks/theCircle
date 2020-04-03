@@ -102,6 +102,8 @@ def signupAPI():
     if 'signupCheck' in request.cookies:
         signupCookie = request.cookies["signupCheck"] # previous signup attempt - cookie should be overwritten
     number = request.form["number"]
+    if not number.isdigit():
+        return generate_popup("Your phone number was invalid, please try again.","/signup")
     username = request.form["username"]
     pass1 = request.form["password"]
     pass2 = request.form["passwordConf"]
@@ -139,7 +141,7 @@ def verifyAPI():
         if cookie and code:
             state = "valid code"
             # add login to database - valid user
-            return generate_popup(("Valid Code: " + str(code)),"/")
+            return generate_popup(("The code " + str(code) + " was valid, you can now login."),"/login")
         elif cookie:
             state = "invalid code"
             # bad code from text
@@ -158,7 +160,23 @@ def verifyAPI():
 
 @app.route('/api/login', methods=["POST"])
 def loginAPI():
-    return render_template("/account/login.html")
+    if "number" in request.form and "password" in request.form:
+        number = request.form["number"]
+        password = request.form["password"]
+        # check against database
+        if True: # if valid
+            resp = make_response(redirect("/"))
+            resp.set_cookie('auth', 'xxx') # change xxx to auth key
+            return resp 
+        elif False: # if invalid
+            message = "The information you entered was not correct. Please double check the form and try again."
+            generate_popup(message,"/login")
+        else: # should never run
+            message = "An error occured. Please double check the form and try again. Please contact us if this continues to happen."
+            generate_popup(message,"/login")
+    else:
+        message = "Not all the required infomation was entered. Please double check the form and try again."
+        generate_popup(message, "/login")
     
 # ------------------------- PAGES --------------------------
 
