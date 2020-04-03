@@ -2,7 +2,9 @@ import datetime
 import os
 import requests
 import urllib.parse as urlencode
-
+import random
+import bcrypt
+import psycopg2
 from flask import Flask
 from flask import render_template
 from flask import redirect
@@ -12,12 +14,22 @@ from flask import make_response
 from flask import send_from_directory
 from flask import url_for
 
+from twilio.rest import Client
+
 from flask_sslify import SSLify
 
 import json
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+conn = psycopg2.connect(host="ec2-79-125-26-232.eu-west-1.compute.amazonaws.com",database="da68ui8vpnunpk", user="bbbtoniaagpfcc", password="a3927fb7aa06479e6146febe7c894fdeaec4bad7771fc74d8335bcc9f5cad4b4")
+SQLcursor = conn.cursor()
+
+account_sid = 'AC8dccea54e5befc531e46bb8a02fe61fa'
+auth_token = 'bc41973b53eeadf5a2b41bc3e233b484'
+client = Client(account_sid, auth_token)
+
 
 
 app = Flask(__name__)
@@ -43,9 +55,31 @@ def copy_to_clip(text,loc): # Don't use single apostophe
     "clipboardHelper.copyString(text);"
     "}}</script>"
     return html
-    
-# ------------------------- ACCOUNTS --------------------------
+def CreateVerificationToken(UserID):
+    SQL = "INSERT INTO public.\"VerificationCode\" (\"UserID\", \"VerificationCode\") VALUES (%s, %s);"
+    VerificationCode = random.randint(0,99999)
+    Data= (UserID,VerificationCode)
+    SQLcursor.execute(SQL,Data)
+    conn.commit()
+    SendTwilioVerificationCode(VerificationCode,UserID)
 
+def SendTwilioVerificationCode(VerificationCode,UserID):
+    PhoneNumberSQL = "SELECT \"phoneNumber\" from users WHERE \"UserID\" = (%s)"
+    PhoneNumberData = (UserID)
+    SQLcursor.execute(PhoneNumberSQL,PhoneNumberData)
+    returneddata = SQLcursor.fetchall()
+
+    message = client.messages \
+    .create(
+         body="The Circle Test message "+ str(VerificationCode),
+         messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
+         to= returneddata
+     )
+    print(message.sid)
+
+
+
+# ------------------------- ACCOUNTS --------------------------
 @app.route('/signup')
 def signup(error=None):
     return render_template("/account/signup.html", error=error)
@@ -73,11 +107,26 @@ def signupAPI():
     pass2 = request.form["passwordConf"]
     if pass1 != pass2:
         error = "Your passwords did not match"
-        return redirect(url_for("/signup",error=error)) # not matching passwords
+        return redirect(url_for("signup",error=error)) # not matching passwords
     # generate verify token
     resp = make_response( redirect("/verify"))
     resp.set_cookie('signupCheck', 'xxxx')
     resp.set_cookie('number', number)
+    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))#decode done in same manner then decode the string
+    if 'X-Forwarded-For' in request.headers: ##https://stackoverflow.com/a/60093677
+        proxy_data = request.headers['X-Forwarded-For']
+        ip_list = proxy_data.split(',')
+        user_ip = ip_list[0]  # first address in list is User IP
+    else:
+        user_ip = request.remote_addr 
+
+
+    SQLInsertNewUser = "INSERT INTO public.users(\"phoneNumber\", \"passHash\", \"signupIP\", \"userName\", \"NumberVerified\") VALUES (%s,%s,%s,%s,%s) RETURNING \"userID\""
+    InsertData = (number,passwordhash,user_ip,username,False)
+    SQLcursor.execute(SQLInsertNewUser,InsertData)
+    returnedID = SQLcursor.fetchone()[0]
+    conn.commit()
+    CreateVerificationToken(returnedID)
     return resp 
 
 @app.route('/api/verify', methods=["POST"])
