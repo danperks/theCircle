@@ -110,7 +110,23 @@ def verifyAPI():
 
 @app.route('/api/login', methods=["POST"])
 def loginAPI():
-    return render_template("/account/login.html")
+    if "number" in request.form and "password" in request.form:
+        number = request.form["number"]
+        password = request.form["password"]
+        # check against database
+        if True: # if valid
+            resp = make_response(redirect("/"))
+            resp.set_cookie('auth', 'xxx') # change xxx to auth key
+            return resp 
+        elif False: # if invalid
+            message = "The information you entered was not correct. Please double check the form and try again."
+            generate_popup(message,"/login")
+        else: # should never run
+            message = "An error occured. Please double check the form and try again. Please contact us if this continues to happen."
+            generate_popup(message,"/login")
+    else:
+        message = "Not all the required infomation was entered. Please double check the form and try again."
+        generate_popup(message, "/login")
     
 # ------------------------- PAGES --------------------------
 
