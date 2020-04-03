@@ -91,7 +91,7 @@ def verifyAPI():
         if cookie and code:
             state = "valid code"
             # add login to database - valid user
-            return generate_popup(("Valid Code: " + str(code)),"/")
+            return generate_popup(("The code " + str(code) + " was valid, you can now login."),"/login")
         elif cookie:
             state = "invalid code"
             # bad code from text
