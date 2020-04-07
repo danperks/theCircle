@@ -21,6 +21,8 @@ from flask_sslify import SSLify
 import json
 
 import urllib3
+#DECLERATION : As always, spelling and grammar mistakes withing comments are always for your enjoyment.
+#Bought to you by the tip of the Pagoda.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 conn = psycopg2.connect(host="ec2-79-125-26-232.eu-west-1.compute.amazonaws.com",database="da68ui8vpnunpk", user="bbbtoniaagpfcc", password="a3927fb7aa06479e6146febe7c894fdeaec4bad7771fc74d8335bcc9f5cad4b4")
@@ -63,20 +65,46 @@ def CreateVerificationToken(UserID):
     conn.commit()
     SendTwilioVerificationCode(VerificationCode,UserID)
 
+def IsPhoneNumberDuplicate(PhoneNumber):
+    params = {'g':tuple([PhoneNumber])}
+    SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"phoneNumber\" in %(g)s ",params)
+    if SQLcursor.rowcount > 0:
+        return True
+    else:
+        return False;
+
 def SendTwilioVerificationCode(VerificationCode,UserID):
-    PhoneNumberSQL = "SELECT \"phoneNumber\" from users WHERE \"UserID\" = (%s)"
-    PhoneNumberData = (UserID)
-    SQLcursor.execute(PhoneNumberSQL,PhoneNumberData)
+    params = {'g':tuple([UserID])}    
+    SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"userID\" in %(g)s ",params)
     returneddata = SQLcursor.fetchall()
 
     message = client.messages \
     .create(
          body="The Circle Test message "+ str(VerificationCode),
          messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
-         to= returneddata
+         to= returneddata[0][0]
      )
     print(message.sid)
 
+def CheckVerificationCode(CodeToCheck):#returns true false and user id
+    l = [CodeToCheck]#https://stackoverflow.com/a/40737575
+    l = tuple(l)
+    truefalse = False
+    params = {'l': l}
+    SQLcursor.execute('SELECT \"UserID\" FROM \"VerificationCode\" WHERE \"VerificationCode\" in %(l)s',params)
+    if SQLcursor.rowcount > 0:
+        truefalse =True
+    for row in SQLcursor.fetchall():
+        ChangeUserActivation(row[0])
+        return (truefalse,row[0])
+        break
+
+
+def ChangeUserActivation(UserID):
+    g = tuple([UserID])
+    params = {'g':g}
+    SQLcursor.execute("UPDATE public.users SET \"NumberVerified\"= True WHERE \"userID\" in %(g)s",params)
+    SQLcursor.commit()
 
 
 # ------------------------- ACCOUNTS --------------------------
@@ -102,6 +130,8 @@ def signupAPI():
     if 'signupCheck' in request.cookies:
         signupCookie = request.cookies["signupCheck"] # previous signup attempt - cookie should be overwritten
     number = request.form["number"]
+    if IsPhoneNumberDuplicate(number):
+        return generate_popup("Your phone number has been previously recorded against this service. Try to Login instead.","/login")
     if not number.isdigit():
         return generate_popup("Your phone number was invalid, please try again.","/signup")
     username = request.form["username"]
@@ -140,8 +170,12 @@ def verifyAPI():
         code = request.form["code"]
         if cookie and code:
             state = "valid code"
-            # add login to database - valid user
-            return generate_popup(("The code " + str(code) + " was valid, you can now login."),"/login")
+            (truefalse,userID) = CheckVerificationCode(code)
+            if truefalse == True:
+                return generate_popup(("The code " + str(code) + " was valid, you can now login."),"/login")
+
+            else:
+                return generate_popup(("No."))
         elif cookie:
             state = "invalid code"
             # bad code from text
@@ -161,12 +195,19 @@ def verifyAPI():
 @app.route('/api/login', methods=["POST"])
 def loginAPI():
     if "number" in request.form and "password" in request.form:
-        number = request.form["number"]
+        number = request.form["number"]#request so passes in to the form as '+4475...'
         password = request.form["password"]
-        # check against database
-        if True: # if valid
+        # check against database 
+        g=tuple([number])    
+        params = {'g':g}
+        SQLcursor.execute('SELECT \"passHash\" FROM users WHERE \"phoneNumber\" in %(g)s',params)
+        for row in SQLcursor.fetchall():
+            storedpassword = row[0]
+            authkey = row[1]
+            break
+        if bcrypt.checkpw(storedpassword.encode('utf-8'),password): # if valid
             resp = make_response(redirect("/"))
-            resp.set_cookie('auth', 'xxx') # change xxx to auth key
+            resp.set_cookie('auth', authkey) # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
             return resp 
         elif False: # if invalid
             message = "The information you entered was not correct. Please double check the form and try again."
