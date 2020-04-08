@@ -80,5 +80,6 @@
               place.formatted_address;
           infowindow.open(map, marker);
           ExportPlaceID = place.place_id;
+          console.log(ExportPlaceID);
         });
       }
