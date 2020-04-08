@@ -57,7 +57,8 @@
 
 
                 <div class="wrap-input100">
-                    
+                  <p>Your Unique Place ID </p>
+                  <p id="PlaceID"></p>                  
                     
                 </div>
 
@@ -67,7 +68,7 @@
                 </div>
 
                 <div class="wrap-input100">
-                  <input class="input100" type="number" name="LenghtOfSession">
+                  <input class="input100" type="number" name="LengthOfSession">
                   <span class="focus-input100" data-placeholder="How Long(Minutes) is A Session"></span>
               </div>
 
@@ -86,9 +87,7 @@
                 <div class="container-login100-form-btn">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
-                        <button class="login100-form-btn">
-            Proceed
-          </button>
+                        <button class="login100-form-btn">Proceed</button>
                     </div>
                 </div>
             </form>
@@ -101,7 +100,11 @@
           </div>
       </div>
   </div>
-
+  <script>
+    if ("{{ error }}" == "None") {
+        document.getElementById("error").style.display = "none";
+    }
+  </script>
   
 
   <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>

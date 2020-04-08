@@ -81,5 +81,6 @@
           infowindow.open(map, marker);
           ExportPlaceID = place.place_id;
           console.log(ExportPlaceID);
+          document.getElementById("PlaceID").innerHTML=ExportPlaceID
         });
       }
