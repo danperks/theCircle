@@ -122,6 +122,11 @@ def verify():
 @app.route('/login')
 def login():
     return render_template("/account/login.html")
+#-------------------------- Bussiness Sign Up
+#Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
+@app.route('/businessSignUp')
+def businessSignUp():
+    return render_template("Business/businessSignUp.html")
 
 # ------------------------- API
 
