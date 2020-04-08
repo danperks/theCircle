@@ -142,9 +142,8 @@ def newbusinessAPI():
         error = "Your passwords did not match"
         return redirect(url_for("signup",error=error))
     passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))
-
-    print(UniqueID)
-    return 0;
+    debug = str(UniqueID) + ", " + str(LengthOfSession) + ", " + str(AmountOfSlots)
+    return debug
 
 
 @app.route('/api/signup', methods=["POST"])
