@@ -132,6 +132,17 @@ def businessSignUp():
 
 @app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
+    UniqueID = request.form["PlaceID"]
+    AmountOfSlots = request.form["AmountOfSlots"]
+    LengthOfSession = request.form["LengthOfSession"]
+    pass1 = request.form["password"]
+    pass2 = request.form["passwordConf"]
+    if pass1 != pass2:
+        error = "Your passwords did not match"
+        return redirect(url_for("signup",error=error))
+    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))
+
+    print(UniqueID)
     return 0;
 
 
