@@ -129,8 +129,8 @@ def businessSignUp():
     return render_template("Business/businessSignUp.html")
 
 # ------------------------- API
-@app.route('/api/newbusiness',methods=["POST"])
 
+@app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
     UniqueID = request.form["PlaceID"]
     AmountOfSlots = request.form["AmountOfSlots"]
