@@ -53,9 +53,11 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
 
     marker.addListener('click', function() {
         infowindow.open(map, marker);
+        console.log("ins")
     });
-
+    
     autocomplete.addListener('place_changed', function() {
+        
         infowindow.close();
 
         var place = autocomplete.getPlace();
@@ -83,8 +85,12 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
         infowindowContent.children['place-id'].textContent = place.place_id;
         infowindowContent.children['place-address'].textContent =
             place.formatted_address;
-        infowindow.open(map, marker);
+        
         ExportPlaceID = place.place_id;
-        console.log(ExportPlaceID);
+        console.log(ExportPlaceID)
+        
+        document.getElementById("hiddenplaceid").value =ExportPlaceID;
+        infowindow.open(map, marker);
+        
     });
 }

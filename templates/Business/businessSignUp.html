@@ -62,13 +62,12 @@
 
                     <div id="infowindow-content">
                         <span id="place-name" class="title"></span><br>
-                        <input type="hidden" value="" name="place-id" id="PlaceID" />
-                        <strong>Place ID:</strong> <span id="place-id"></span><br>
+                        <strong>Place ID:</strong> <span  id="place-id"></span><br>
                         <span id="place-address"></span>
                     </div>
 
                     <div id="map"></div>
-
+                    <input  type ="hidden" name ="spanname" id = "hiddenplaceid" value="default">
                     <br>
                     <div class="container-login100-form-btn">
                         <div class="wrap-login100-form-btn">
@@ -84,7 +83,9 @@
     </div>
     <script src="static/js/map.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places&callback=initMap" async defer></script>
-
+    <script>
+        document.getElementById("hiddenplaceid").value = "Tester"
+    </script>
     </div>
     </div>
     </div>
