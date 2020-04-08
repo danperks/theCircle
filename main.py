@@ -132,7 +132,7 @@ def businessSignUp():
 
 @app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
-    UniqueID = request.form["PlaceID"]
+    UniqueID = request.form["place-id"]
     AmountOfSlots = request.form["AmountOfSlots"]
     LengthOfSession = request.form["LengthOfSession"]
     pass1 = request.form["password"]
