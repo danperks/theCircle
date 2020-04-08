@@ -129,6 +129,11 @@ def businessSignUp():
     return render_template("Business/businessSignUp.html")
 
 # ------------------------- API
+@app.route('/api/newbusiness',methods=["POST"])
+
+def newbusinessAPI():
+    return 0;
+
 
 @app.route('/api/signup', methods=["POST"])
 def signupAPI():
