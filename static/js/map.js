@@ -15,7 +15,7 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
         zoom: 13,
         streetViewControl: false,
         fullscreenControl: false,
-        mapTypeControl: falses
+        mapTypeControl: false
     });
 
     if (navigator.geolocation) {
