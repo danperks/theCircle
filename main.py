@@ -87,8 +87,7 @@ def SendTwilioVerificationCode(VerificationCode,UserID):
     print(message.sid)
 
 def CheckVerificationCode(CodeToCheck):#returns true false and user id
-    l = [CodeToCheck]#https://stackoverflow.com/a/40737575
-    l = tuple(l)
+    l = tuple([CodeToCheck])#https://stackoverflow.com/a/40737575
     truefalse = False
     params = {'l': l}
     SQLcursor.execute('SELECT \"UserID\" FROM \"VerificationCode\" WHERE \"VerificationCode\" in %(l)s',params)
@@ -301,7 +300,7 @@ def index():
 
 if __name__ == '__main__':
     
-    debug = True
+    debug = False
     
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=debug)
