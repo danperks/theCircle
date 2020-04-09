@@ -122,11 +122,31 @@ def verify():
 @app.route('/login')
 def login():
     return render_template("/account/login.html")
-#-------------------------- Bussiness Sign Up
+
+
+# ------------------------- BUSINESS --------------------------
 #Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
-@app.route('/businessSignUp')
-def businessSignUp():
-    return render_template("Business/businessSignUp.html")
+
+@app.route('/business/signUp')
+def bLogin():
+    return render_template("business/signup.html")
+
+@app.route('/business/login')
+def bSignup():
+    return render_template("business/login.html")
+
+@app.route('/business/dashboard')
+def bDashboard():
+    return render_template("business/dashboard.html")
+
+@app.route('/business/qr')
+def bScanner():
+    return render_template("business/qrScanner.html")
+
+@app.route('/business/live-chat')
+def bLivechat():
+    return render_template("business/livechat.html")
+
 
 # ------------------------- API
 
@@ -246,14 +266,20 @@ def loginAPI():
 def icon():
     return send_file("./static/images/favicon.ico", mimetype='image/ico')
 
-@app.route('/redirect')
-def programming():
-    return redirect("/")
+@app.route('/request')
+def request():
+    return render_template("request.html")
 
-@app.route('/time')
-def time():
-    return str(datetime.datetime.now())
+@app.route('/browse')
+def browse():
+    return render_template("browse.html")
 
+
+# ------------------------- DEV --------------------------
+
+@app.route('/qr')
+def browse():
+    return send_file("./static/images/qr.png", mimetype='image/png')
 
 # ------------------------ ERRORS --------------------------
 

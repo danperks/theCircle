@@ -28,9 +28,9 @@
             </div>
             <div class="sidebar-wrapper" id="sidebar-wrapper">
                 <ul class="nav">
-                    <li class="active">
+                    <li>
                         <a href="/">
-                            <i class="activeicon now-ui-icons design_app"></i>
+                            <i class="now-ui-icons design_app"></i>
                             <p>Home</p>
                         </a>
                     </li>
@@ -51,9 +51,9 @@
                             <p> </p>
                         </a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="/business/dashboard">
-                            <i class="now-ui-icons users_single-02"></i>
+                            <i class="activeicon now-ui-icons users_single-02"></i>
                             <p>Business Dashboard</p>
                         </a>
                     </li>
@@ -79,14 +79,7 @@
             </div>
         </div>
         <div class="main-panel" id="main-panel">
-            <div id="infowindow-content">
-                <span id="place-name" class="title"></span><br>
-                <input type="hidden" value="" name="place-id" id="PlaceID" />
-                <strong>Place ID:</strong> <span id="place-id"></span><br>
-                <span id="place-address"></span>
-            </div>
-
-            <div id="map"></div>
+            Stuff goes here
         </div>
     </div>
     <!--   Core JS Files   -->
@@ -95,10 +88,7 @@
     <script src="/static/js/core/bootstrap.min.js"></script>
     <script src="/static/js/plugins/perfect-scrollbar.jquery.min.js"></script>
 
-    <script src="static/js/map.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places&callback=initMap" async defer></script>
     <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
-    <script src="/static/js/main.js"></script>
 </body>
 
 </html>
