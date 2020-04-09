@@ -249,13 +249,13 @@ def loginAPI():
         SQLcursor.execute('SELECT \"passHash\",\"userID\" FROM users WHERE \"phoneNumber\" in %(g)s',params)
         for row in SQLcursor.fetchall():
             storedpassword = row[0]
-            authkey = row[1]
+            authkey = int(row[1])
             break
         print(password)
         print(storedpassword)
         if bcrypt.checkpw(password.encode('utf-8'),storedpassword.encode('utf-8')): # if valid
             resp = make_response(redirect("/"))
-            resp.set_cookie('auth', authkey) # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
+            resp.set_cookie('auth', str(authkey)) # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
             return resp 
         elif False: # if invalid
             message = "The information you entered was not correct. Please double check the form and try again."
