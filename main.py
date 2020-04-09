@@ -143,7 +143,7 @@ def bDashboard():
 def bScanner():
     return render_template("business/qrScanner.html")
 
-@app.route('/business/live-chat')
+@app.route('/business/livechat')
 def bLivechat():
     return render_template("business/livechat.html")
 
@@ -259,6 +259,11 @@ def loginAPI():
     else:
         message = "Not all the required infomation was entered. Please double check the form and try again."
         generate_popup(message, "/login")
+        
+@app.route('/api/logout')
+def logout():
+    # delete all login cookies (both user and business)
+    return redirect("/")
     
 # ------------------------- PAGES --------------------------
 

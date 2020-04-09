@@ -11,6 +11,7 @@
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/static/css/now-ui-dashboard.css?" rel="stylesheet" />
     <link href="/static/css/dashboard.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 </head>
 
 <body class="">
@@ -49,9 +50,9 @@
                             <p> </p>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="/business/dashboard">
-                            <i class="activeicon now-ui-icons users_single-02"></i>
+                            <i class="now-ui-icons users_single-02"></i>
                             <p>Business Dashboard</p>
                         </a>
                     </li>
@@ -61,9 +62,9 @@
                             <p>Scan QR Code</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="/business/livechat">
-                            <i class="now-ui-icons text_caps-small"></i>
+                            <i class="activeicon now-ui-icons text_caps-small"></i>
                             <p>Live Chat</p>
                         </a>
                     </li>
@@ -76,227 +77,17 @@
                 </ul>
             </div>
         </div>
-        <div class="main-panel" id="main-panel">
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
-                <div class="container-fluid">
-                    <div class="navbar-wrapper">
-                        <div class="navbar-toggle">
-                            <button type="button" class="navbar-toggler">
-                <span class="navbar-toggler-bar bar1"></span>
-                <span class="navbar-toggler-bar bar2"></span>
-                <span class="navbar-toggler-bar bar3"></span>
-              </button>
-                        </div>
-                        <a class="navbar-brand" style="color: black;">Dashboard</a>
-                    </div>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-          </button>
-                </div>
-            </nav>
-            <!-- End Navbar -->
-            <div class="panel-header panel-header-lg">
-                <canvas id="bigDashboardChart"></canvas>
-            </div>
-            <div class="content">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-category">Infomation</h5>
-                                <h4 class="card-title">Date: <span id="date"></span></h4>
-                                <h4 class="card-title">Time: <span id="time"></span></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-category">Admin</h5>
-                                <h4 class="card-title"> Store Controls</h4>
-                            </div>
-                            <div class="card-body">
-                                This will have buttons for stuff
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-category">Admin</h5>
-                                <h4 class="card-title"> Store Controls</h4>
-                            </div>
-                            <div class="card-body">
-                                This will have buttons for stuff
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-category">Admin</h5>
-                                <h4 class="card-title"> Store Controls</h4>
-                            </div>
-                            <div class="card-body">
-                                This will have buttons for stuff
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-category">Customer List</h5>
-                                <h4 class="card-title"> Today's Customers</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead class=" text-primary">
-                                            <th>Name</th>
-                                            <th>Phone Number</th>
-                                            <th>City</th>
-                                            <th class="text-right">
-                                                Arrival Time
-                                            </th>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    Dakota Rice
-                                                </td>
-                                                <td>
-                                                    Niger
-                                                </td>
-                                                <td>
-                                                    Oud-Turnhout
-                                                </td>
-                                                <td class="text-right">
-                                                    $36,738
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Minerva Hooper
-                                                </td>
-                                                <td>
-                                                    Curaçao
-                                                </td>
-                                                <td>
-                                                    Sinaai-Waas
-                                                </td>
-                                                <td class="text-right">
-                                                    $23,789
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Sage Rodriguez
-                                                </td>
-                                                <td>
-                                                    Netherlands
-                                                </td>
-                                                <td>
-                                                    Baileux
-                                                </td>
-                                                <td class="text-right">
-                                                    $56,142
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Doris Greene
-                                                </td>
-                                                <td>
-                                                    Malawi
-                                                </td>
-                                                <td>
-                                                    Feldkirchen in Kärnten
-                                                </td>
-                                                <td class="text-right">
-                                                    $63,542
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Mason Porter
-                                                </td>
-                                                <td>
-                                                    Chile
-                                                </td>
-                                                <td>
-                                                    Gloucester
-                                                </td>
-                                                <td class="text-right">
-                                                    $78,615
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="main-panel" id="main-panel" style="height: 100vh;">
         </div>
     </div>
     <!--   Core JS Files   -->
-    <script src="/static/js/core/jquery.min.js"></script>
-    <script src="/static/js/core/popper.min.js"></script>
-    <script src="/static/js/core/bootstrap.min.js"></script>
-    <script src="/static/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <script src="/static/js/core/jquery.min.js "></script>
+    <script src="/static/js/core/popper.min.js "></script>
+    <script src="/static/js/core/bootstrap.min.js "></script>
+    <script src="/static/js/plugins/perfect-scrollbar.jquery.min.js "></script>
 
-    <!-- Chart JS -->
-    <script src="/static/js/plugins/chartjs.min.js"></script>
-    <script src="/static/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
-    <script src="/static/js/dashboard.js"></script>
-    <script>
-        $(document).ready(function() {
-            dash.initDashboardPageCharts();
-            startTime()
-        });
-    </script>
-    <script>
-        function startTime() {
-
-            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-            function nth(n) {
-                return n + (n > 0 ? ['th', 'st', 'nd', 'rd'][(n > 3 && n < 21) || n % 10 > 3 ? 0 : n % 10] : '');
-            }
-
-            var today = new Date();
-            var hours = today.getHours();
-            var mins = today.getMinutes();
-            var seconds = today.getSeconds();
-            var year = today.getFullYear();
-            var month = today.getMonth() + 1;
-            var date = today.getDate();
-            var ordi = nth(date)
-            var day = today.getDay()
-            mins = checkTime(mins);
-            seconds = checkTime(seconds);
-
-
-            document.getElementById('time').innerHTML =
-                hours + ":" + mins + ":" + seconds;
-
-            document.getElementById('date').innerHTML =
-                days[day] + " " + ordi + " " + months[month]
-            var t = setTimeout(startTime, 500);
-        }
-
-        function checkTime(i) {
-            if (i < 10) {
-                i = "0" + i
-            }; // add zero in front of numbers < 10
-            return i;
-        }
-    </script>
+    <script src="/static/vendor/jquery/jquery-3.2.1.min.js "></script>
+    <script type="text/javascript " src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js "></script>
 </body>
 
 </html>
