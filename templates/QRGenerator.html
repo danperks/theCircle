@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<php $hello = "hello"?>
+<html lang="en">
+<head>
+    <title>The Circle - QR Scanner</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    
+    <script src="/static/js/main.js"></script>
+</head>
+<script>
+    window.addEventListener('DOMContentLoaded', init);
+
+    function init(){
+        const form = document.querySelector('[data-calc-form]');
+        const textInput = document.querySelector('[name=text]');
+        const preview = document.querySelector('[data-preview]');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = textInput.value;
+            const results = await fetchEstimations(text);
+            preview.textContent = JSON.stringify(results, null, 4);
+            new QRCode(document.getElementById("qr-code"),preview.textContent)
+            });
+        }
+
+        async function fetchEstimations(text) {
+             const payload = new FormData();
+            payload.append('text', text);
+
+            const res = await fetch('/QRPersonal', {
+                method: 'post',
+                body: payload
+            });
+            const estimation = await res.json();
+            return estimation;
+        }
+</script>
+<body>
+    <a class="dropdown" href="/"> Home </a>
+    <a class="login" href="/login"> Log In </a>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div id="qr-code"></div>
+                <script type = "text/javascript"></script>
+            </div>
+            <form method="POST" action="/calc" data-calc-form>
+    <input type="text" name='text'>
+    <button>Calculate</button>
+    <pre data-preview></pre>
+</form>
+            <pre></pre>
+            
+        </div>
+    </div>
+
+    <script>
+        if ("{{ error }}" == "None") {
+            document.getElementById("error").style.display = "none";
+        }
+    </script>
+
+   
+    
+
+</body>
+
+</html>
