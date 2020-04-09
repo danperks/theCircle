@@ -13,13 +13,14 @@ from flask import request
 from flask import make_response
 from flask import send_from_directory
 from flask import url_for
+from flask import jsonify as jsfy
 
 from twilio.rest import Client
 
 from flask_sslify import SSLify
 
 import json
-
+import jsonify
 import urllib3
 #DECLERATION : As always, spelling and grammar mistakes withing comments are always for your enjoyment.
 #Bought to you by the tip of the Pagoda.
@@ -119,7 +120,19 @@ def verify():
 @app.route('/login')
 def login():
     return render_template("/account/login.html")
+@app.route("/QRCreator")
+def bCreate():
+    return render_template("QRGenerator.html")
 
+
+@app.route('/QRPersonal',methods =['POST'])
+def QRpersonalFunc():
+    userID = request.cookies["auth"]
+    userID = 47
+    params = {'y':tuple([userID])}
+    SQLcursor.execute('SELECT * FROM \"Appointments\" WHERE \"userID\" in %(y)s',params)
+    for row in SQLcursor.fetchall():
+        return jsfy(row)
 
 # ------------------------- BUSINESS --------------------------
 #Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
