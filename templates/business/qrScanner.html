@@ -91,9 +91,9 @@
             </span>
             <video style="display: block; margin: 20px auto; max-width:100%; max-height:100%;" id="preview"></video>
             <br /><br />
-            <table id="table" class="table" style="width: fit-content; margin: 0 auto; ">
+            <table id="table" class="table" style="width: 60%; margin: 0 auto; ">
                 <thead class=" text-primary ">
-                    <tr style="font-size:calc(20px + 0.02vw); text-align: center;">
+                    <tr style="font-size: clamp(2px, 2vw, 18px); text-align: center; overflow-wrap: break-word;">
                         <th>Name</th>
                         <th>Phone Number</th>
                         <th>Appoitment Time</th>
@@ -124,14 +124,14 @@
                 });
                 Instascan.Camera.getCameras().then(function(cameras) {
                     if (cameras.length > 0) {
-                        scanner.start(cameras[0]);
+                        scanner.start(cameras[cameras.length - 1]);
                         var vid = document.getElementById("preview ");
                         document.getElementById("table ").style.width = 100 % -vid.videoWidth;
                     } else {
                         console.error('No cameras found.');
                     }
                 }).catch(function(e) {
-                    console.error(e);
+                    console.log(e);
                 });
             </script>
         </div>
@@ -141,6 +141,7 @@
     <script src="/static/js/core/popper.min.js "></script>
     <script src="/static/js/core/bootstrap.min.js "></script>
     <script src="/static/js/plugins/perfect-scrollbar.jquery.min.js "></script>
+    <script src="/static/js/now-ui-dashboard.js"></script>
 
     <script src="/static/vendor/jquery/jquery-3.2.1.min.js "></script>
     <script type="text/javascript " src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js "></script>
