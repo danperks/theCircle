@@ -29,7 +29,7 @@ conn = psycopg2.connect(host="ec2-79-125-26-232.eu-west-1.compute.amazonaws.com"
 SQLcursor = conn.cursor()
 
 account_sid = 'AC8dccea54e5befc531e46bb8a02fe61fa'
-auth_token = 'bc41973b53eeadf5a2b41bc3e233b484'
+auth_token = '386ca0c98d54557cb24a72fb1f8e7784'
 client = Client(account_sid, auth_token)
 
 
@@ -160,10 +160,15 @@ def newbusinessAPI():
     pass2 = request.form["passwordConf"]
     if pass1 != pass2:
         error = "Your passwords did not match"
-        return redirect(url_for("signup",error=error))
+        return redirect(url_for("/business/signUp",error=error))
     passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))
-    debug = str(UniqueID) + ", " + str(LengthOfSession) + ", " + str(AmountOfSlots)
-    return debug
+    
+    SQLInsertNewBusiness = "INSERT INTO public.Establishments(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\") VALUES (%s,%s,%s,%s,%s)"
+    InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash)
+    SQLcursor.execute(SQLInsertNewBusiness,InsertData)
+    conn.commit()
+    return "fill in later "
+    
 
 
 @app.route('/api/signup', methods=["POST"])
