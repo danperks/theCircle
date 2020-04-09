@@ -142,7 +142,11 @@
                 });
                 Instascan.Camera.getCameras().then(function(cameras) {
                     if (cameras.length > 0) {
-                        scanner.start(cameras[cameras.length - 1]);
+                        $.each(cameras, (i, c) => {
+                            console.log(i)
+                            console.log(c)
+                        });
+                        scanner.start(cameras[1]);
                         var vid = document.getElementById("preview ");
                         document.getElementById("table ").style.width = 100 % -vid.videoWidth;
                     } else {

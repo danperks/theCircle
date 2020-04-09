@@ -251,7 +251,7 @@ def loginAPI():
             storedpassword = row[0]
             authkey = row[1]
             break
-        if bcrypt.checkpw(storedpassword.encode('utf-8'),password): # if valid
+        if bcrypt.checkpw(storedpassword.encode('utf-8'),password.encode('utf-8')): # if valid
             resp = make_response(redirect("/"))
             resp.set_cookie('auth', authkey) # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
             return resp 
