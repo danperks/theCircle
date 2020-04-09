@@ -32,8 +32,6 @@ account_sid = 'AC8dccea54e5befc531e46bb8a02fe61fa'
 auth_token = '386ca0c98d54557cb24a72fb1f8e7784'
 client = Client(account_sid, auth_token)
 
-
-
 app = Flask(__name__)
 app.static_folder = "static"
 app.template_folder = "templates"
@@ -103,7 +101,7 @@ def ChangeUserActivation(UserID):
     g = tuple([UserID])
     params = {'g':g}
     SQLcursor.execute("UPDATE public.users SET \"NumberVerified\"= True WHERE \"userID\" in %(g)s",params)
-    SQLcursor.commit()
+    conn.commit()
 
 
 # ------------------------- ACCOUNTS --------------------------
@@ -172,12 +170,15 @@ def newbusinessAPI():
 
 @app.route('/api/signup', methods=["POST"])
 def signupAPI():
+    print(type(request))
     if 'signupCheck' in request.cookies:
         signupCookie = request.cookies["signupCheck"] # previous signup attempt - cookie should be overwritten
     number = request.form["number"]
+    if number[0] != "+":
+        return generate_popup("Your phone number need to start with your country code (e.g. +44xxxxxxxx). Please try again.","/signup")
     if IsPhoneNumberDuplicate(number):
         return generate_popup("Your phone number has been previously recorded against this service. Try to Login instead.","/login")
-    if not number.isdigit():
+    if not number[1:].isdigit():
         return generate_popup("Your phone number was invalid, please try again.","/signup")
     username = request.form["username"]
     pass1 = request.form["password"]
@@ -276,7 +277,7 @@ def icon():
     return send_file("./static/images/favicon.ico", mimetype='image/ico')
 
 @app.route('/request')
-def request():
+def requestShop():
     return render_template("request.html")
 
 @app.route('/browse')
@@ -305,7 +306,7 @@ def index():
 
 if __name__ == '__main__':
     
-    debug = False
+    debug = True
     
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=debug)
