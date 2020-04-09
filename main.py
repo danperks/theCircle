@@ -246,7 +246,7 @@ def loginAPI():
         # check against database 
         g=tuple([number])    
         params = {'g':g}
-        SQLcursor.execute('SELECT \"passHash\" FROM users WHERE \"phoneNumber\" in %(g)s',params)
+        SQLcursor.execute('SELECT \"passHash\",\"userID\" FROM users WHERE \"phoneNumber\" in %(g)s',params)
         for row in SQLcursor.fetchall():
             storedpassword = row[0]
             authkey = row[1]
