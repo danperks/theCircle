@@ -72,6 +72,18 @@ def IsPhoneNumberDuplicate(PhoneNumber):
     else:
         return False;
 
+def GetPhoneNumber(userID):
+    params={'p':tuple([userID])}
+    SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"userID\" in %(p)s ",params)
+    for row in SQLcursor:
+        return row[0]
+
+def GetUserName(userID):
+    params={'p':tuple([userID])}
+    SQLcursor.execute("SELECT \"userName\" from users WHERE \"userID\" in %(p)s ",params)
+    for row in SQLcursor:
+        return row[0]
+
 def SendTwilioVerificationCode(VerificationCode,UserID):
     params = {'g':tuple([UserID])}    
     SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"userID\" in %(g)s ",params)
@@ -130,10 +142,16 @@ def QRpersonalFunc():
     userID = request.cookies["auth"]
     userID = 47
     params = {'y':tuple([userID])}
+    output = ""
+    userName = GetUserName(userID)
+    ApptTime = ""
+    PhoneNumber = GetPhoneNumber(userID)
     SQLcursor.execute('SELECT * FROM \"Appointments\" WHERE \"userID\" in %(y)s',params)
     for row in SQLcursor.fetchall():
-        return jsfy(row)
-
+        ApptTime = row[1]
+        break;
+    
+    return jsfy(userName,PhoneNumber,ApptTime)
 # ------------------------- BUSINESS --------------------------
 #Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
 
@@ -264,7 +282,7 @@ def loginAPI():
             storedpassword = row[0]
             authkey = int(row[1])
             break
-        if bcrypt.checkpw(storedpassword.encode('utf-8'),password.encode('utf-8')): # if valid
+        if bcrypt.checkpw(password.encode('utf-8'),storedpassword.encode('utf-8')): # if valid
             resp = make_response(redirect("/"))
             resp.set_cookie('auth', str(authkey)) # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
             return resp 
