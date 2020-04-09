@@ -190,7 +190,7 @@ def signupAPI():
     resp = make_response( redirect("/verify"))
     resp.set_cookie('signupCheck', 'xxxx')
     resp.set_cookie('number', number)
-    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))#decode done in same manner then decode the string
+    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')#decode done in same manner then decode the string
     if 'X-Forwarded-For' in request.headers: ##https://stackoverflow.com/a/60093677
         proxy_data = request.headers['X-Forwarded-For']
         ip_list = proxy_data.split(',')
@@ -251,7 +251,9 @@ def loginAPI():
             storedpassword = row[0]
             authkey = row[1]
             break
-        if bcrypt.checkpw(storedpassword.encode('utf-8'),password): # if valid
+        print(password)
+        print(storedpassword)
+        if bcrypt.checkpw(password.encode('utf-8'),storedpassword.encode('utf-8')): # if valid
             resp = make_response(redirect("/"))
             resp.set_cookie('auth', authkey) # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
             return resp 
