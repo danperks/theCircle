@@ -278,7 +278,7 @@ def browse():
 # ------------------------- DEV --------------------------
 
 @app.route('/qr')
-def browse():
+def testqr():
     return send_file("./static/images/qr.png", mimetype='image/png')
 
 # ------------------------ ERRORS --------------------------
