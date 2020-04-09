@@ -152,8 +152,8 @@ def bLivechat():
 
 @app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
-    UniqueID = request.form["place-id"]
-    LengthOfSession = request.form["lengthofsession"]
+    UniqueID = request.form["spanname"]
+    LengthOfSession = request.form.get("lengthofsession")
     AmountOfSlots = request.form["AmountOfSlots"]
     
     pass1 = request.form["password"]
