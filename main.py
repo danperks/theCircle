@@ -149,7 +149,7 @@ def bCreate():
 
 @app.route('/QRPersonal',methods =['GET'])
 def QRpersonalFunc():
-    userID = request.cookies["auth"]
+    #userID = request.cookies["auth"]
     userID = 47
     params = {'y':tuple([userID])}
     output = ""
@@ -303,6 +303,16 @@ def verifyAPI():
 
     else:
         return redirect("/signup")
+@app.route('/api/requestbusiness',methods=["POST"])
+
+def AddNewShopRequest():
+
+    if "shopID" in request.form:
+        placeID = request.form["shopid"]
+        parmas = {"t":tuple([placeID])}
+        SQLcursor.execute("INSERT INTO \"ShopRequests\"() VALUES)
+    
+    return "s"
 
 @app.route('/api/login', methods=["POST"])
 def loginAPI():
