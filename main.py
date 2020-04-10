@@ -310,7 +310,9 @@ def AddNewShopRequest():
     if "shopID" in request.form:
         placeID = request.form["shopid"]
         parmas = {"t":tuple([placeID])}
-        SQLcursor.execute("INSERT INTO \"ShopRequests\"() VALUES)
+        SQLcursor.execute("INSERT INTO \"ShopRequests\"(\"GoogleIdentity\") VALUES (%(t)s)",parmas)
+        conn.commit()
+
     
     return "s"
 
