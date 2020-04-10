@@ -14,7 +14,7 @@ from flask import make_response
 from flask import send_from_directory
 from flask import url_for
 from flask import jsonify as jsfy
-
+from flask_table import Table,Col
 from twilio.rest import Client
 
 from flask_sslify import SSLify
@@ -174,8 +174,24 @@ def bScanner():
 @app.route('/business/livechat')
 def bLivechat():
     return render_template("business/livechat.html")
-
-
+@app.route('/business/tabledata')
+def TableData():
+    output = ""
+    businessID ="Test"##this is to be changed to the cookie one, just to make it work atm.
+    params={'y':tuple([businessID])}
+    SQLcursor.execute('SELECT * FROM \"Appointments\" WHERE \"businessID\" in %(y)s',params)
+    AppointmentsFetch = SQLcursor.fetchall()
+    for row in AppointmentsFetch:
+        AppointmentTime = row[1]
+        params={'g':tuple([row[0]])}
+        SQLcursor.execute("SELECT \"userName\",\"phoneNumber\",\"HealthcareOveride\" from users WHERE \"userID\" in %(g)s ",params)
+        for item in SQLcursor.fetchall():
+            username = item[0]
+            phonenumber = item[1]
+            healthcare = item[2]
+            output=output+username+phonenumber+str(healthcare)+str(AppointmentTime)
+    print(jsfy(output))
+    return jsfy(output)
 # ------------------------- API
 
 @app.route('/api/newbusiness',methods=["POST"])
@@ -334,6 +350,8 @@ def page_not_found(e):
 def index():
     locations = {"London":("51.5073219","-0.1276474"), "Me":("52.5352881","-2.1847034"),"James":("52.4584169955596","-2.08708015178975")}
     return render_template("index.html", locations=locations)
+
+
 
 if __name__ == '__main__':
     
