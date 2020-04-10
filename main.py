@@ -16,6 +16,7 @@ from flask import url_for
 from flask import jsonify as jsfy
 from flask_table import Table,Col
 from twilio.rest import Client
+from typing import List
 
 from flask_sslify import SSLify
 
@@ -40,6 +41,15 @@ app.template_folder = "templates"
 if 'DYNO' in os.environ:
     sslify = SSLify(app)
 
+
+class Appointment(object):
+    def __init__(self,username:str,phonenumber:str,healthcare:str,AppTime:str):
+        self.username = username
+        self.phonenumber = phonenumber
+        self.healthcare = healthcare
+        self.AppTime = AppTime
+
+    
 # ------------------------- MISC --------------------------
 
 def generate_popup(text,loc): # Don't use single apostophe
@@ -137,7 +147,7 @@ def bCreate():
     return render_template("QRGenerator.html")
 
 
-@app.route('/QRPersonal',methods =['POST'])
+@app.route('/QRPersonal',methods =['GET'])
 def QRpersonalFunc():
     userID = request.cookies["auth"]
     userID = 47
@@ -174,24 +184,33 @@ def bScanner():
 @app.route('/business/livechat')
 def bLivechat():
     return render_template("business/livechat.html")
-@app.route('/business/tabledata')
+
+@app.route('/business/tabledata' ,methods = ['POST'])
 def TableData():
     output = ""
     businessID ="Test"##this is to be changed to the cookie one, just to make it work atm.
     params={'y':tuple([businessID])}
     SQLcursor.execute('SELECT * FROM \"Appointments\" WHERE \"businessID\" in %(y)s',params)
     AppointmentsFetch = SQLcursor.fetchall()
+    count = 0
+    
+    PluralAppts = [] 
     for row in AppointmentsFetch:
-        AppointmentTime = row[1]
+        AppointmentTime = str(row[1])
         params={'g':tuple([row[0]])}
         SQLcursor.execute("SELECT \"userName\",\"phoneNumber\",\"HealthcareOveride\" from users WHERE \"userID\" in %(g)s ",params)
-        for item in SQLcursor.fetchall():
+        for item in SQLcursor.fetchall():            
             username = item[0]
             phonenumber = item[1]
             healthcare = item[2]
-            output=output+username+phonenumber+str(healthcare)+str(AppointmentTime)
-    print(jsfy(output))
-    return jsfy(output)
+            if count ==0:
+                count=count+1
+                PluralAppts.append(Appointment(username=item[0],phonenumber=item[1],healthcare=item[2],AppTime=AppointmentTime))
+            else:
+               PluralAppts.append(Appointment(username=item[0],phonenumber=item[1],healthcare=item[2],AppTime=AppointmentTime))
+            #outputList.append(jsfy(username=username,phonenumber=phonenumber,healthcare=str(healthcare),ApptId=str(AppointmentTime)))
+    
+    return json.dumps(PluralAppts,default=lambda o:o.__dict__,indent=4)
 # ------------------------- API
 
 @app.route('/api/newbusiness',methods=["POST"])

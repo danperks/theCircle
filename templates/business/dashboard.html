@@ -145,6 +145,7 @@
                             </div>
                         </div>
                     </div>
+                    <pre data-preview></pre>
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
@@ -153,87 +154,18 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <form method="POST" action="/calc" data-calc-form></form>
+
+                                    <table class="table" id ="apptable">
                                         <thead class=" text-primary">
                                             <th>Name</th>
                                             <th>Phone Number</th>
                                             <th>HealthCare </th>
                                             <th class="text-right">
-                                                Arrival Time
+                                                Appointment Time
                                             </th>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    Dakota Rice
-                                                </td>
-                                                <td>
-                                                    Niger
-                                                </td>
-                                                <td>
-                                                    Oud-Turnhout
-                                                </td>
-                                                <td class="text-right">
-                                                    $36,738
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Minerva Hooper
-                                                </td>
-                                                <td>
-                                                    Curaçao
-                                                </td>
-                                                <td>
-                                                    Sinaai-Waas
-                                                </td>
-                                                <td class="text-right">
-                                                    $23,789
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Sage Rodriguez
-                                                </td>
-                                                <td>
-                                                    Netherlands
-                                                </td>
-                                                <td>
-                                                    Baileux
-                                                </td>
-                                                <td class="text-right">
-                                                    $56,142
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Doris Greene
-                                                </td>
-                                                <td>
-                                                    Malawi
-                                                </td>
-                                                <td>
-                                                    Feldkirchen in Kärnten
-                                                </td>
-                                                <td class="text-right">
-                                                    $63,542
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Mason Porter
-                                                </td>
-                                                <td>
-                                                    Chile
-                                                </td>
-                                                <td>
-                                                    Gloucester
-                                                </td>
-                                                <td class="text-right">
-                                                    $78,615
-                                                </td>
-                                            </tr>
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -253,6 +185,7 @@
     <script src="/static/js/plugins/chartjs.min.js"></script>
     <script src="/static/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
     <script src="/static/js/dashboard.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
             dash.initDashboardPageCharts();
@@ -296,6 +229,70 @@
             }; // add zero in front of numbers < 10
             return i;
         }
+
+
+
+
+        
+    window.addEventListener('DOMContentLoaded', init);
+
+    
+       
+        const preview = document.querySelector('[data-preview]');
+        var table =  document.createElement("appttable2");
+        
+        async function init(){
+         
+        
+            
+            const results = await fetchEstimations();
+            
+            
+            var arrayofjson= JSON.parse(JSON.stringify(results));
+            
+            
+            var html = '';
+            
+            for (var i = 0; i < arrayofjson.length; i++) {
+                
+                html += '<tr><td>' + arrayofjson[i].username + '</td><td>' + arrayofjson[i].phonenumber + '</td><td>' + arrayofjson[i].healthcare + '</td><td class="text-right">' + arrayofjson[i].AppTime+ '</td></tr>';
+            }
+           
+            $('#apptable tbody').append(html);
+        
+
+
+
+
+
+    };
+
+        async function fetchEstimations() {
+             
+
+             const res = await fetch('/business/tabledata', {
+                 method: 'post',
+ 
+                
+             });
+             const estimation = await res.json();
+             
+             return estimation;
+         }
+         
+
+
+
+
+
+        
+
+            
+
+
+
+
+ 
     </script>
 </body>
 

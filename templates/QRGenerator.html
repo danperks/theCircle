@@ -14,27 +14,25 @@
 <script>
     window.addEventListener('DOMContentLoaded', init);
 
-    function init(){
-        const form = document.querySelector('[data-calc-form]');
-        const textInput = document.querySelector('[name=text]');
+    async function init(){
+        
+       
         const preview = document.querySelector('[data-preview]');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = textInput.value;
-            const results = await fetchEstimations(text);
+        
+            
+            const results = await fetchEstimations();
             preview.textContent = JSON.stringify(results, null, 4);
             new QRCode(document.getElementById("qr-code"),preview.textContent)
-            });
-        }
+            };
+        
 
-        async function fetchEstimations(text) {
-             const payload = new FormData();
-            payload.append('text', text);
+        async function fetchEstimations() {
+             //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
 
             const res = await fetch('/QRPersonal', {
-                method: 'post',
-                body: payload
+                method: 'get',
+                
             });
             const estimation = await res.json();
             return estimation;
@@ -49,7 +47,7 @@
                 <div id="qr-code"></div>
                 <script type = "text/javascript"></script>
             </div>
-            <form method="POST" action="/calc" data-calc-form>
+            <form method="POST" action="" data-calc-form>
     <input type="text" name='text'>
     <button>Calculate</button>
     <pre data-preview></pre>
