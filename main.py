@@ -304,6 +304,10 @@ def browse():
 def testqr():
     return send_file("./static/images/qr.png", mimetype='image/png')
 
+@app.route('/qrtest')
+def qrtest():
+    return render_template("qrtest.html")
+
 # ------------------------ ERRORS --------------------------
 
 @app.errorhandler(404)
