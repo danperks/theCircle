@@ -53,30 +53,30 @@
                         <span class="focus-input100" data-placeholder="Confirm Password"></span>
                     </div>
                     <div>
-                        <span class="centertext"> If you are classed as Vulnerable or work in healthcare, please contact us to verify your status</span>
-                    <div id="error" class="centertext" style="color: rgb(226, 0, 0);">Error: {{ error }}</div>
+                        <span class="txt1 centertext"> If you are classed as Vulnerable or work in healthcare, please contact us to verify your status</span>
+                        <div id="error" class="centertext" style="color: rgb(226, 0, 0);">Error: {{ error }}</div>
 
-                    <div class="container-login100-form-btn">
-                        <div class="wrap-login100-form-btn">
-                            <div class="login100-form-bgbtn"></div>
-                            <button class="login100-form-btn">
-								Login
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn">
+								Sign Up
 							</button>
+                            </div>
                         </div>
-                    </div>
                 </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        if ("{{ error }}" == "None") {
-            document.getElementById("error").style.display = "none";
-        }
-    </script>
+        <script>
+            if ("{{ error }}" == "None") {
+                document.getElementById("error").style.display = "none";
+            }
+        </script>
 
-    <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
-    <script src="/static/js/main.js"></script>
+        <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
+        <script src="/static/js/main.js"></script>
 
 </body>
 
