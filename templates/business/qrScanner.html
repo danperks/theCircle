@@ -107,6 +107,10 @@
                     <br /><br />
                 </p>
             </span>
+            <div style="margin: 0 auto; display: table">
+                <select id="cameras"></select>
+                <button style="margin-left: 20px">Start</button>
+            </div>
             <video style="display: block; margin: 20px auto; max-width:100%; max-height:100%;" id="preview"></video>
             <br /><br /><br />
             <table id="table" class="table" style="width: 60%; margin: 0 auto; ">
@@ -121,6 +125,31 @@
                 <tbody id="tablebody" style="text-align: center;">
                 </tbody>
             </table>
+
+            <script type="text/javascript">
+                Instascan.Camera.getCameras().then(function(cameras) {
+                    if (cameras.length > 0) {
+                        $.each(cameras, (i, c) => {
+                            var option = document.createElement("option");
+                            option.text = c.name;
+                            option.value = i;
+                            var select = document.getElementById("cameras");
+                            select.appendChild(option);
+                        });
+                        var tab = document.getElementById("cameras");
+                        var cam = tab.options[e.selectedIndex].value;
+                        scanner.start(cameras[cam]);
+                        var vid = document.getElementById("preview ");
+                        document.getElementById("table ").style.width = 100 % -vid.videoWidth;
+                    } else {
+                        console.error('No cameras found.');
+                    }
+                }).catch(function(e) {
+                    console.log(e);
+                });
+            </script>
+
+
             <script type="text/javascript ">
                 const tab = document.getElementById("tablebody")
                 let scanner = new Instascan.Scanner({
