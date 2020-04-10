@@ -255,7 +255,7 @@
             
             for (var i = 0; i < arrayofjson.length; i++) {
                 
-                html += '<tr><td>' + arrayofjson[i].username + '</td><td>' + arrayofjson[i].phonenumber + '</td><td>' + arrayofjson[i].healthcare + '</td><td class="text-right">' + arrayofjson[i].AppTime+ '</td></tr>';
+                html += '<tr><td>' + arrayofjson[i].username + '</td><td>' + arrayofjson[i].phonenumber + '</td><td>' + arrayofjson[i].healthcare + '</td><td class="text-right">' + new Date((arrayofjson[i].AppTime)).toLocaleTimeString()+ '</td></tr>';
             }
            
             $('#apptable tbody').append(html);
