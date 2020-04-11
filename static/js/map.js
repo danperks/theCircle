@@ -80,7 +80,7 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
         });
 
         marker.setVisible(true);
-
+        
         infowindowContent.children['place-name'].textContent = place.name;
         infowindowContent.children['place-id'].textContent = place.place_id;
         infowindowContent.children['place-address'].textContent =
@@ -98,7 +98,7 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
 
 
 
-function MapBrowse() { //https://developers.google.com/maps/documentation/javascript/geolocation
+async function MapBrowse() { //https://developers.google.com/maps/documentation/javascript/geolocation
     var map, infoWindow;
     var map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 51.841100, lng: -30.508039 },
@@ -119,8 +119,35 @@ function MapBrowse() { //https://developers.google.com/maps/documentation/javasc
     };
 
 
+    const results = await fetchplaces();
+    var ArrayOfPlaceID = ['Eh1BZGVsYWlkZSBTdCwgQ292ZW50cnkgQ1YxLCBVSyIuKiwKFAoSCc8WV_S_S3dIEWZmR37TBd78EhQKEgmpkcdCETtaAhF6JYgyQ6D4xA','ChIJcUPaFltKd0gRXVDAnM3WjVA']
+
+    for(i = 0;i<Object.keys(results).length;i++){
+    var request = {
+        placeId: results[i]
+    };
+    var service = new google.maps.places.PlacesService(map);
+    service.getDetails(request, function(place, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          var marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+          });
+        }});
+    }
+    
 
 
+
+    /* var markerlan2 = new google.maps.LatLng(ArrayOfLats[0], ArrayOfLongs[0]);
+    var marker2 = new google.maps.Marker({
+        position: markerlan2,
+        map:map,
+        title:"Hello World!"
+        
+    }); */
+    
+    
 
 
 
@@ -179,8 +206,19 @@ function MapBrowse() { //https://developers.google.com/maps/documentation/javasc
         ExportPlaceID = place.place_id;
         console.log(ExportPlaceID)
         
-        document.getElementById("hiddenplaceid").value =ExportPlaceID;
+        //document.getElementById("hiddenplaceid").value =ExportPlaceID;
         infowindow.open(map, marker);
         
     });
+    
+}
+
+async function fetchplaces(){
+    const res = await fetch('api/fetchplaces', {
+        method: 'get',
+        
+    });
+    const estimation = await res.json()
+    
+    return estimation;
 }

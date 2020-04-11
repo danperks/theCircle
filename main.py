@@ -128,7 +128,10 @@ def CheckVerificationCode(CodeToCheck):#returns true false and user id
         ChangeUserActivation(row[0])
         return (truefalse,row[0])
         break
-
+def RemoveVerificationCode(UserID):
+    params={'g':tuple([UserID])}
+    SQLcursor.execute("DELETE FROM public.\"VerificationCode\" WHERE \"UserID\" in %(g)s",params)
+    conn.commit()
 
 def ChangeUserActivation(UserID):
     g = tuple([UserID])
@@ -226,7 +229,16 @@ def TableData():
     
     return json.dumps(PluralAppts,default=lambda o:o.__dict__,indent=4)
 # ------------------------- API
+@app.route('/api/fetchplaces',methods=["GET"])
 
+def returnPlaces():
+    ArrayOfPlaceID =[]
+    SQLcursor.execute("SELECT \"GoogleIdentity\" FROM \"Establishments\"");
+    
+    for row in SQLcursor.fetchall():
+        ArrayOfPlaceID.append(row[0])
+        
+    return jsfy(ArrayOfPlaceID)
 @app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
     UniqueID = request.form["spanname"]
@@ -298,6 +310,7 @@ def verifyAPI():
             state = "valid code"
             (truefalse,userID) = CheckVerificationCode(code)
             if truefalse == True:
+                RemoveVerificationCode(userID)
                 return generate_popup(("The code " + str(code) + " was valid, you can now login."),"/login")
 
             else:
