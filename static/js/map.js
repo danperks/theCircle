@@ -90,7 +90,7 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
         console.log(ExportPlaceID)
         
         document.getElementById("hiddenplaceid").value =ExportPlaceID;
-        document.getElementById("LatLong").value=place.place_id.location;
+        document.getElementById("hiddenlocationid").value=str(place.place_id.location);
         infowindow.open(map, marker);
         
     });

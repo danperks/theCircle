@@ -56,7 +56,7 @@
                         <input class="input100" type="password" name="passwordConf">
                         <span class="focus-input100" data-placeholder="Confirm Password"></span>
                     </div>
-
+                   
                     <div>
                         <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
                     </div>
@@ -66,10 +66,11 @@
                         <strong>Place ID:</strong> <span  id="place-id"></span><br>
                         <span id="place-address"></span>
                     </div>
-
+                    
                     <div id="map"></div>
+
                     <input  type ="hidden" name ="spanname" id = "hiddenplaceid" value="default">
-                    <input  type ="hidden" name ="LatLong" id = "LatLong" value="default">
+                     <input type ="hidden" name ="LatLong" id = "hiddenlocationid" value="ted">
                     <br>
                     <div class="container-login100-form-btn">
                         <div class="wrap-login100-form-btn">
@@ -87,7 +88,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places&callback=initMap" async defer></script>
     <script>
         document.getElementById("hiddenplaceid").value = "Tester"
-        document.getElementById("LatLong").value = "Tester"
+        
     </script>
     </div>
     </div>
