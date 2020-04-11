@@ -342,7 +342,14 @@ def AddNewShopRequest():
 
     
     return "s"
+@app.route('/api/BookSlot',methods=["POST"])
 
+def BookSlot():
+    SelectAppID = request.form["AppID"]
+    userID = request.form["userID"]
+    parmas = {'u':tuple([userID]),'a':tuple([SelectAppID])}
+    SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",parmas)
+    return "slot booked"
 @app.route('/api/login', methods=["POST"])
 def loginAPI():
     if "number" in request.form and "password" in request.form:
