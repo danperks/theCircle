@@ -94,6 +94,16 @@ def GetUserName(userID):
     for row in SQLcursor:
         return row[0]
 
+def GetHealthcareStatus(userID):
+    params={'h':tuple([userID])}
+    SQLcursor.execute("SELECT \"HealthcareOveride\" from users WHERE \"userID\" in %(h)s ",params)
+    for row in SQLcursor:
+        if row[0] == False:
+            
+            return row[0]
+        else:
+            return True
+
 def SendTwilioVerificationCode(VerificationCode,UserID):
     params = {'g':tuple([UserID])}    
     SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"userID\" in %(g)s ",params)
@@ -154,8 +164,12 @@ def QRpersonalFunc():
     params = {'y':tuple([userID])}
     output = ""
     userName = GetUserName(userID)
-    ApptTime = ""
+    UserOveride = GetHealthcareStatus(userID);
     PhoneNumber = GetPhoneNumber(userID)
+    if UserOveride:
+        return jsfy(userName,PhoneNumber,"Healthcare / Vulnerable Override")
+    ApptTime = ""
+    
     SQLcursor.execute('SELECT * FROM \"Appointments\" WHERE \"userID\" in %(y)s',params)
     for row in SQLcursor.fetchall():
         ApptTime = row[1]
