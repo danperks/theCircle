@@ -1,0 +1,39 @@
+<html>
+<body>
+    
+</body>
+
+<script>
+    console.log("script")
+    console.log("te"); //https://developers.google.com/maps/documentation/javascript/geolocation
+         if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(async function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            }
+            console.log(pos)
+        
+        
+        console.log("ca")
+        const results = await fetchEstimations(pos);
+        console.log(results)
+    });
+    }
+
+
+    async function fetchEstimations(data) {
+             //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
+            console.log("called")
+            await fetch('/get5matches', {
+                method: 'post',
+                body:JSON.stringify(data)
+                
+            });
+            
+           // console.log(res)
+           
+        }
+</script>
+
+</html>

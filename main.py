@@ -179,6 +179,10 @@ def QRpersonalFunc():
         break;
     
     return jsfy(userName,PhoneNumber,ApptTime)
+
+@app.route('/shopping')
+def shoppingreroute():
+    return render_template('shopping.html')
 # ------------------------- BUSINESS --------------------------
 #Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
 
@@ -232,6 +236,7 @@ def TableData():
 @app.route('/api/fetchplaces',methods=["GET"])
 
 def returnPlaces():
+    
     ArrayOfPlaceID =[]
     SQLcursor.execute("SELECT \"GoogleIdentity\" FROM \"Establishments\"");
     
@@ -241,19 +246,23 @@ def returnPlaces():
     return jsfy(ArrayOfPlaceID)
 @app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
+   
+   
     UniqueID = request.form["spanname"]
     LengthOfSession = request.form.get("lengthofsession")
     AmountOfSlots = request.form["AmountOfSlots"]
-    
+    LatLong = request.form["LatLong"] 
     pass1 = request.form["password"]
     pass2 = request.form["passwordConf"]
+    Latitude = LatLong.split(",")[0]
+    Longitude = LatLong.split(",")[1]
     if pass1 != pass2:
         error = "Your passwords did not match"
         return redirect(url_for("/business/signUp",error=error))
     passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))
     
-    SQLInsertNewBusiness = "INSERT INTO public.Establishments(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\") VALUES (%s,%s,%s,%s,%s)"
-    InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash)
+    SQLInsertNewBusiness = "INSERT INTO public.Establishments(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\",\"Latitude\",\"Longtitude\") VALUES (%s,%s,%s,%s,%s,%s,%s)"
+    InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash,Latitude,Longitude)
     SQLcursor.execute(SQLInsertNewBusiness,InsertData)
     conn.commit()
     return "fill in later "
@@ -330,6 +339,9 @@ def verifyAPI():
 
     else:
         return redirect("/signup")
+
+
+
 @app.route('/api/requestbusiness',methods=["POST"])
 
 def AddNewShopRequest():
@@ -342,12 +354,42 @@ def AddNewShopRequest():
 
     
     return "s"
+
+@app.route('/get5matches',methods=["POST"])
+
+def ReturnMatches():
+    LocalBusinessess = []
+    Offers = []
+    currentLocation =json.loads(request.data)
+    radius = 0
+    userID = request.cookies["auth"]
+    while len(Offers)< 6:
+        radius = radius +1#increase radius by 1 point
+        params={"lat":tuple([currentLocation[0]]),"long":tuple([currentLocation[1]]),"radius":tuple[radius],"userID":tuple([userID])}#parameters for quert
+        SQLcursor.execute("SELECT \"businessID\" FROM \"Establishments\" WHERE \"latitude\" BETWEEN %(lat)s AND (%(lat)s +%(radius)s) AND WHERE \"longtitude\" BETWEEN %(long)s AND (%(long)s + %(radius)s)",params)
+        for row in SQLcursor.fetchall():#get all establishements within the lat and long range of the user , increases until 5 offers found
+            LocalBusinessess.append(row[0])##adds the businesses to the table of businesses
+        SQLstmt = "SELECT \"appointmentID\" FROM \"Appointments\" LIMIT 6  WHERE \"businessID\" in %s AND \"userID\" = null " #gets all the unclaimed appointments
+        SQLData = (LocalBusinessess)#pass data in
+        SQLcursor.execute(SQLstmt,LocalBusinessess)
+        for row in SQLcursor.fetchall():
+            Offers.append(row[0])#append the offers
+        params["offers"] = Offers
+        ClaimSlotsSQL = "UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in
+
+    
+
+    
+    return "recieved"
+
+
 @app.route('/api/BookSlot',methods=["POST"])
 
 def BookSlot():
     SelectAppID = request.form["AppID"]
     userID = request.form["userID"]
     parmas = {'u':tuple([userID]),'a':tuple([SelectAppID])}
+    #rememeber to send off the text message
     SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",parmas)
     return "slot booked"
 @app.route('/api/login', methods=["POST"])
