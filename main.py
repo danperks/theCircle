@@ -141,6 +141,10 @@ def ChangeUserActivation(UserID):
 
 
 # ------------------------- ACCOUNTS --------------------------
+@app.route('/accounts')
+def accounts(error=None):
+    return render_template("/accounts.html", error=error)
+
 @app.route('/signup')
 def signup(error=None):
     return render_template("/account/signup.html", error=error)
@@ -186,7 +190,7 @@ def shoppingreroute():
 # ------------------------- BUSINESS --------------------------
 #Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
 
-@app.route('/business/signUp')
+@app.route('/business/signup')
 def bLogin():
     return render_template("business/signup.html")
 
@@ -375,7 +379,7 @@ def ReturnMatches():
         for row in SQLcursor.fetchall():
             Offers.append(row[0])#append the offers
         params["offers"] = Offers
-        ClaimSlotsSQL = "UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in
+        ClaimSlotsSQL = "UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in"
 
     
 
