@@ -379,8 +379,9 @@ def ReturnMatches():
         for row in SQLcursor.fetchall():
             Offers.append(row[0])#append the offers
         params["offers"] = Offers
-        ClaimSlotsSQL = "UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in"
-
+        ClaimSlotsSQL = ("UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in %(offers)s",params)
+        SQLcursor.commit()
+    
     
 
     
