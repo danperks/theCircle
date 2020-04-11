@@ -200,7 +200,7 @@ def bScanner():
 
 @app.route('/business/livechat')
 def bLivechat():
-    return render_template("business/livechat.html")
+    return render_template("about.html")
 
 @app.route('/business/tabledata' ,methods = ['POST'])
 def TableData():
@@ -396,7 +396,9 @@ def requestShop():
 def browse():
     return render_template("browse.html")
 
-
+@app.route('/about')
+def About():
+    return render_template("about.html")
 # ------------------------- DEV --------------------------
 
 @app.route('/qr')
