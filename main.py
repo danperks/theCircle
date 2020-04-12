@@ -249,23 +249,28 @@ def returnPlaces():
         
     return jsfy(ArrayOfPlaceID)
 @app.route('/api/newbusiness',methods=["POST"])
-def newbusinessAPI():
-   
-   
-    UniqueID = request.form["spanname"]
-    LengthOfSession = request.form.get("lengthofsession")
-    AmountOfSlots = request.form["AmountOfSlots"]
-    LatLong = request.form["LatLong"] 
-    pass1 = request.form["password"]
-    pass2 = request.form["passwordConf"]
+def newbusinessAPI(): 
+    Output = request.form.to_dict()
+    
+        
+    UniqueID = Output["spanname"]
+    LengthOfSession = Output["lengthofsession"]
+    LatLong = Output["LatLong"] 
+    AmountOfSlots = Output["AmountOfSlots"]
+    
+    pass1 = Output["password"]
+    pass2 = Output["passwordConf"]
+    LatLong = LatLong.split("(")[1]
+    LatLong =LatLong.split(")")[0]
     Latitude = LatLong.split(",")[0]
     Longitude = LatLong.split(",")[1]
+    
     if pass1 != pass2:
         error = "Your passwords did not match"
         return redirect(url_for("/business/signUp",error=error))
-    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12))
+    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
     
-    SQLInsertNewBusiness = "INSERT INTO public.Establishments(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\",\"Latitude\",\"Longtitude\") VALUES (%s,%s,%s,%s,%s,%s,%s)"
+    SQLInsertNewBusiness = "INSERT INTO \"Establishments\"(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\",\"Latitude\",\"Longitude\") VALUES (%s,%s,%s,%s,%s,%s,%s)"
     InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash,Latitude,Longitude)
     SQLcursor.execute(SQLInsertNewBusiness,InsertData)
     conn.commit()
@@ -370,7 +375,7 @@ def ReturnMatches():
     while len(Offers)< 6:
         radius = radius +1#increase radius by 1 point
         params={"lat":tuple([currentLocation[0]]),"long":tuple([currentLocation[1]]),"radius":tuple[radius],"userID":tuple([userID])}#parameters for quert
-        SQLcursor.execute("SELECT \"businessID\" FROM \"Establishments\" WHERE \"latitude\" BETWEEN %(lat)s AND (%(lat)s +%(radius)s) AND WHERE \"longtitude\" BETWEEN %(long)s AND (%(long)s + %(radius)s)",params)
+        SQLcursor.execute("SELECT \"businessID\" FROM \"Establishments\" WHERE \"latitude\" BETWEEN %(lat)s AND (%(lat)s +%(radius)s) AND WHERE \"longitude\" BETWEEN %(long)s AND (%(long)s + %(radius)s)",params)
         for row in SQLcursor.fetchall():#get all establishements within the lat and long range of the user , increases until 5 offers found
             LocalBusinessess.append(row[0])##adds the businesses to the table of businesses
         SQLstmt = "SELECT \"appointmentID\" FROM \"Appointments\" LIMIT 6  WHERE \"businessID\" in %s AND \"userID\" = null " #gets all the unclaimed appointments
