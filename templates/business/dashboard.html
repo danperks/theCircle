@@ -188,53 +188,26 @@
             return i;
         }
 
-
-
-
-
         window.addEventListener('DOMContentLoaded', init);
-
-
 
         const preview = document.querySelector('[data-preview]');
         var table = document.createElement("appttable2");
 
         async function init() {
-
-
-
             const results = await fetchEstimations();
-
-
             var arrayofjson = JSON.parse(JSON.stringify(results));
-
-
             var html = '';
-
             for (var i = 0; i < arrayofjson.length; i++) {
-
                 html += '<tr><td>' + arrayofjson[i].username + '</td><td>' + arrayofjson[i].phonenumber + '</td><td>' + arrayofjson[i].healthcare + '</td><td class="text-right">' + new Date((arrayofjson[i].AppTime)).toLocaleTimeString() + '</td></tr>';
             }
-
             $('#apptable tbody').append(html);
-
-
-
-
-
-
         };
 
         async function fetchEstimations() {
-
-
             const res = await fetch('/business/tabledata', {
                 method: 'post',
-
-
             });
             const estimation = await res.json();
-
             return estimation;
         }
     </script>

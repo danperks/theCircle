@@ -288,7 +288,7 @@ def businessSignup():
         conn.commit()
     except psycopg2.errors.UniqueViolation:
         return generate_popup("Your business has already been signed up. You will now be taken to the login page.","/business/login")
-    return redirect(url_for("/business/dashboard",error="Your business has been successfully added! You will now be added to "))
+    return generate_popup("Your business has been successfully added! You will be taken to the login page", "/business/login")
     
     
 @app.route('/api/business/login',methods=["POST"])
@@ -306,8 +306,7 @@ def businessLogin():
         if item[1] == UniqueID:
            # print(passwordhash)
             if bcrypt.checkpw(password.encode("utf-8"), item[0].encode("utf-8")):
-                print("worked")
-                resp = make_response(generate_popup("You have logged in successfully","/"))
+                resp = make_response(generate_popup("You have logged in successfully. You will now be taken to the dashboard.","/business/dashboard"))
                 resp.set_cookie('bauth', UniqueID)
                 return resp
 
@@ -412,11 +411,13 @@ def ReturnMatches():
     FutileCount = 0
     while len(Offers)< 6:
         if FutileCount ==60:
-            break;
+            break
         radius = radius +1#increase radius by 1 point
         params={"lat":tuple([currentLocation["lat"]]),"long":tuple([currentLocation["lng"]]),"radius":tuple([radius]),"userID":tuple([userID])}#parameters for quert
         SQLcursor.execute("SELECT \"GoogleIdentity\"  FROM \"Establishments\" WHERE \"Latitude\" BETWEEN %(lat)s -%(radius)s AND %(lat)s +%(radius)s AND  \"Longitude\" BETWEEN %(long)s -%(radius)s AND %(long)s + %(radius)s LIMIT 6",params)
-        for row in SQLcursor.fetchall():#get all establishements within the lat and long range of the user , increases until 5 offers found
+        data = SQLcursor.fetchall()
+        print(len(data))
+        for row in data:#get all establishements within the lat and long range of the user , increases until 5 offers found
             LocalBusinessess.append(row[0])
             print("test")#adds the businesses to the table of businesses
           #gets all the unaimed appointments     
@@ -508,7 +509,10 @@ def requestShop():
 
 @app.route('/book')
 def requestaslot():
-    return render_template("request.html")
+    if "auth" in request.cookies:
+        return render_template("request.html")
+    else:
+        return generate_popup("You are not currently logged in. You will be returned to the main page.", "/")
 
 @app.route('/about')
 def About():
@@ -520,7 +524,7 @@ def testqr():
     return send_file("./static/images/qr.png", mimetype='image/png')
 
 @app.route('/qrtest')
-def qrtest():
+def qrtest():   
     return render_template("qrtest.html")
 
 # ------------------------ ERRORS --------------------------

@@ -85,36 +85,37 @@
             return "done";
         }
         if (navigator.geolocation) {
-             navigator.geolocation.getCurrentPosition(async function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            }
-            console.log(pos)
-        
-        
-        console.log("ca")
-        const JSONFillOut = await fetchEstimations(pos);
-        console.log(JSONFillOut)
-        });
+            navigator.geolocation.getCurrentPosition(async function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                }
+                console.log(pos)
+
+
+                console.log("ca")
+                const JSONFillOut = await fetchEstimations(pos);
+                console.log(JSONFillOut)
+            });
         }
-        
-    
-    
-        
+
+
+
+
         async function fetchEstimations(data) {
-             //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
+            //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
             console.log("called")
             const res = await fetch('/api/getstores', {
                 method: 'post',
-                body:JSON.stringify(data)
-                
+                body: JSON.stringify(data)
+
             });
             const estimation = await res.json();
             return estimation;
 
         }
-        console.log(JSONFillOut[0])
+        //console.log(JSONFillOut[0])
+
         json = [
             ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
             ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
@@ -124,7 +125,6 @@
         ]
 
         form = document.getElementById("choices")
-
 
         for (var choice in json) {
             result = getBusinessName(json[choice][0])
@@ -156,7 +156,6 @@
             button.appendChild(buttoninner)
             form.appendChild(button)
         }
-        
     </script>
 
 

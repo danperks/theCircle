@@ -260,7 +260,7 @@ function addtosidesidebarerror(text, bad) {
 // HERE HARRISON
 
 function getBusinessName(name) {
-    init()
+    init();
     var request = {
         placeId: name,
         fields: ['name', 'formatted_address', ]
@@ -272,7 +272,7 @@ function getBusinessName(name) {
     });
 
     return [placename, addr]
-}
+};
 
 
 async function fetchplaces() {
