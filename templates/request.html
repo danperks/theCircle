@@ -127,34 +127,42 @@
         form = document.getElementById("choices")
 
         for (var choice in json) {
-            //result = getBusinessName(json[choice][0])
-            // console.log(result)
-            name = "filled from db"
-            addr = "filled from db"
-            console.log(name, addr)
-            title = document.createElement("h4");
-            title.className = "title choicetitle"
-            title.innerHTML = name + " - " + json[choice][1] + " " + json[choice][2]
-            form.appendChild(title)
-            subtitle = document.createElement("p");
-            subtitle.className = "card-title choicesub"
-            subtitle.innerHTML = addr
-            form.appendChild(subtitle)
-            button = document.createElement("div");
-            button.className = "container-login100-form-btn"
-            button.style.padding = "0 10px"
-            buttoninner = document.createElement("div")
-            buttoninner.className = "wrap-login100-form-btn"
-            buttoninnerinner = document.createElement("div")
-            buttoninnerinner.className = "login100-form-bgbtn"
-            buttoninner.appendChild(buttoninnerinner)
-            actualbutton = document.createElement("button")
-            actualbutton.className = "login100-form-btn"
-            actualbutton.onclick = "choose(" + choice + ")"
-            actualbutton.innerHTML = "Choice this option"
-            buttoninner.appendChild(actualbutton)
-            button.appendChild(buttoninner)
-            form.appendChild(button)
+
+            name = json[choice][0]
+
+            var request = {
+                placeId: name,
+                fields: ['name', 'formatted_address', ]
+            };
+
+            var service = new google.maps.places.PlacesService(document.createElement('div'));
+            service.getDetails(request, function(place, status) {
+                busname = place.name
+                addr = place.formatted_address
+                title = document.createElement("h4");
+                title.className = "title choicetitle"
+                title.innerHTML = busname + " - " + json[choice][1] + " " + json[choice][2]
+                form.appendChild(title)
+                subtitle = document.createElement("p");
+                subtitle.className = "card-title choicesub"
+                subtitle.innerHTML = addr
+                form.appendChild(subtitle)
+                button = document.createElement("div");
+                button.className = "container-login100-form-btn"
+                button.style.padding = "0 10px"
+                buttoninner = document.createElement("div")
+                buttoninner.className = "wrap-login100-form-btn"
+                buttoninnerinner = document.createElement("div")
+                buttoninnerinner.className = "login100-form-bgbtn"
+                buttoninner.appendChild(buttoninnerinner)
+                actualbutton = document.createElement("button")
+                actualbutton.className = "login100-form-btn"
+                actualbutton.onclick = "choose(" + choice + ")"
+                actualbutton.innerHTML = "Choice this option"
+                buttoninner.appendChild(actualbutton)
+                button.appendChild(buttoninner)
+                form.appendChild(button)
+            });
         }
     </script>
 

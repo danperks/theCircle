@@ -286,16 +286,12 @@ async function fetchplaces() {
     console.log(estimation)
     navigator.geolocation.getCurrentPosition(
         function(position) {
-            addtosidesidebar("Place 1", "/", false);
-            addtosidesidebar("Place 2", "/", false);
-            addtosidesidebar("Place 3", "/", true);
-            addtosidesidebar("Place 4", "/", false);
-            addtosidesidebar("Place 5", "/", false);
-            addtosidesidebar("Place 6", "/", false);
-            addtosidesidebar("Place 7", "/", true);
-            addtosidesidebar("Place 8", "/", true);
-            addtosidesidebar("Place 9", "/", false);
-            addtosidesidebar("Place 10", "/", false);
+            addtosidesidebar("Sainsbury's", "/", false);
+            addtosidesidebar("Midcounties Co-op", "/", false);
+            addtosidesidebar("Spar", "/", false);
+            addtosidesidebar("Texaco", "/", true);
+            addtosidesidebar("The Railway Cafe", "/", false);
+            addtosidesidebar("Morrisons", "/", false);
             return estimation;
 
         }.bind(this),
