@@ -50,30 +50,13 @@
                 </div>
             </nav>
             <div style="text-align: center">
-                <div style="display: inline-block; width: 50%; height: 100vh; padding-top: 60px;">
-                    <h2 class="title" style="padding-top: 40px; margin-bottom: 10px">Request a Slot</h2>
+                <div style="display: inline-block; width: 90%; max-width: 1000px; height:100vh; padding-top: 60px;">
+                    <h2 class="title choicetitle">Request a Slot</h2>
                     <p class="card-title" style="padding-bottom: 10px;">Fill this form in to request a slot to shop at a local store.</p>
-                    <form class="login100-form validate-form" action="/api/login" method="POST">
-
-                        <div class="wrap-input100">
-                            <input class="input100" type="text" name="number">
-                            <span class="focus-input100" data-placeholder="Phone Number"></span>
-                        </div>
-
-                        <div class="wrap-input100 validate-input" data-validate="Enter password">
-                            <input class="input100" type="password" name="password">
-                            <span class="focus-input100" data-placeholder="Password"></span>
-                        </div>
-
-                        <div class="container-login100-form-btn">
-                            <div class="wrap-login100-form-btn">
-                                <div class="login100-form-bgbtn"></div>
-                                <button class="login100-form-btn">
-                                    Login
-                                </button>
-                            </div>
-                        </div>
+                    <form id="choices" class="login100-form validate-form" style="width:80%; margin: 0 auto;">
+                        <hr>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -89,9 +72,63 @@
     <script src="/static/js/core/popper.min.js "></script>
     <script src="/static/js/core/bootstrap.min.js "></script>
     <script src="/static/js/plugins/perfect-scrollbar.jquery.min.js "></script>
-    <script src="/static/js/now-ui-dashboard.js"></script>
+    <script src="/static/js/now-ui-dashboard.js "></script>
 
     <script src="/static/vendor/jquery/jquery-3.2.1.min.js "></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places" async defer></script>
+    <script src="/static/js/map.js"></script>
+
+    <script>
+        function choose(index) {
+            console.log(index)
+            return "done";
+        }
+
+        json = [
+            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"]
+        ]
+
+        form = document.getElementById("choices")
+
+
+        for (var choice in json) {
+            result = getBusinessName(json[choice][0])
+            console.log(result)
+            name = result[0]
+            addr = result[1]
+            console.log(name, addr)
+            title = document.createElement("h4");
+            title.className = "title choicetitle"
+            title.innerHTML = name + " - " + json[choice][1] + " " + json[choice][2]
+            form.appendChild(title)
+            subtitle = document.createElement("p");
+            subtitle.className = "card-title choicesub"
+            subtitle.innerHTML = addr
+            form.appendChild(subtitle)
+            button = document.createElement("div");
+            button.className = "container-login100-form-btn"
+            button.style.padding = "0 10px"
+            buttoninner = document.createElement("div")
+            buttoninner.className = "wrap-login100-form-btn"
+            buttoninnerinner = document.createElement("div")
+            buttoninnerinner.className = "login100-form-bgbtn"
+            buttoninner.appendChild(buttoninnerinner)
+            actualbutton = document.createElement("button")
+            actualbutton.className = "login100-form-btn"
+            actualbutton.onclick = "choose(" + choice + ")"
+            actualbutton.innerHTML = "Choice this option"
+            buttoninner.appendChild(actualbutton)
+            button.appendChild(buttoninner)
+            form.appendChild(button)
+        }
+    </script>
+
+
 </body>
 
 </html>
