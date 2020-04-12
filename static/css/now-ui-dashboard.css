@@ -4086,6 +4086,16 @@ Created using IcoMoon - icomoon.io
     z-index: 3;
 }
 
+.sidebar2:after,
+.off-canvas-sidebar:after {
+    background: #252525;
+    background: -webkit-linear-gradient(bottom, rgb(65, 65, 65), rgb(27, 27, 27));
+    background: -o-linear-gradient(bottom, rgb(65, 65, 65), rgb(27, 27, 27));
+    background: -moz-linear-gradient(bottom, rgb(65, 65, 65), rgb(27, 27, 27));
+    background: linear-gradient(bottom, rgb(65, 65, 65), rgb(27, 27, 27));
+    z-index: 3;
+}
+
 .visible-on-sidebar-regular {
     display: inline-block !important;
 }

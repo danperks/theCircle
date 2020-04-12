@@ -18,6 +18,11 @@ from flask_table import Table,Col
 from twilio.rest import Client
 from typing import List
 
+from datetime import datetime
+import time
+import threading
+
+
 from flask_sslify import SSLify
 
 import json
@@ -237,8 +242,8 @@ def TableData():
     
     return json.dumps(PluralAppts,default=lambda o:o.__dict__,indent=4)
 # ------------------------- API
-@app.route('/api/fetchplaces',methods=["GET"])
 
+@app.route('/api/fetchplaces',methods=["GET"])
 def returnPlaces():
     
     ArrayOfPlaceID =[]
@@ -248,9 +253,9 @@ def returnPlaces():
         ArrayOfPlaceID.append(row[0])
         
     return jsfy(ArrayOfPlaceID)
+
 @app.route('/api/newbusiness',methods=["POST"])
 def newbusinessAPI():
-   
    
     UniqueID = request.form["spanname"]
     LengthOfSession = request.form.get("lengthofsession")
@@ -426,8 +431,10 @@ def loginAPI():
         
 @app.route('/api/logout')
 def logout():
-    # delete all login cookies (both user and business)
-    return redirect("/")
+    resp = make_response(redirect("/"))
+    resp.set_cookie("auth", '', expires=0)
+    resp.set_cookie("bauth", '', expires=0)
+    return resp
     
 # ------------------------- PAGES --------------------------
 
@@ -435,13 +442,13 @@ def logout():
 def icon():
     return send_file("./static/images/favicon.ico", mimetype='image/ico')
 
-@app.route('/request')
+@app.route('/addashop')
 def requestShop():
-    return render_template("request.html")
+    return render_template("addashop.html")
 
-@app.route('/browse')
-def browse():
-    return render_template("browse.html")
+@app.route('/book')
+def bookaslot():
+    return render_template("book.html")
 
 @app.route('/about')
 def About():
@@ -466,14 +473,26 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
-    locations = {"London":("51.5073219","-0.1276474"), "Me":("52.5352881","-2.1847034"),"James":("52.4584169955596","-2.08708015178975")}
-    return render_template("index.html", locations=locations)
+    return render_template("index new.html")
 
+
+
+def midnightRun():
+    time.sleep(10)
+    while True:
+        now = datetime.now()
+        tfmidnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+        t2midnight = int(86400 - tfmidnight)
+        print("Waiting " + str(t2midnight) + " seconds until midnight")
+        time.sleep(t2midnight)
+        print("It's midnight, flushing database")
 
 
 if __name__ == '__main__':
     
-    debug = True
+    debug = False
     
+    t = threading.Thread(target=midnightRun)
+    t.start()
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=debug)

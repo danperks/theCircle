@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>The Circle - Log In</title>
+    <title>The Circle - Accounts</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="static/images/favicon.ico">
@@ -12,64 +12,64 @@
 
 <body>
     <a class="dropdown" href="/"> Home </a>
-    <a class="login" href="/signup"> Sign Up </a>
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <form class="login100-form validate-form" method="POST">
-                    <span class="login100-form-title">
-						Log In
+                <span class="login100-form-title">
+						Accounts Menu
                     </span>
-                    <br>
-                    <div class="text-center p-b-26">
-                        <span class="txt1 centertext">
-                            To log into an existing, enter your phone number and a password below.<br>
-                            If you do not have an account already, click <a href="/signup">here to sign up.</a>
+                <br>
+                <div class="text-center p-b-26">
+                    <span class="txt1 centertext">
+                            If you are looking to book a slot at a local store, choose Customer Signup.<br/>
+                            If you already have an account for this, click Customer Login.<br /><br />
 						</span>
-                    </div>
-                    <br>
+                </div>
 
-
-                    <div class="container-login100-form-btn">
-                        <div class="wrap-login100-form-btn">
-                            <div class="login100-form-bgbtn"></div>
-                            <button onclick="/login" class="login100-form-btn">
+                <div class="container-login100-form-btn">
+                    <div class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button onclick="location.href = '/login';" class="login100-form-btn">
 								Customer Login
 							</button>
-                        </div>
                     </div>
+                </div>
 
-                    <div class="container-login100-form-btn">
-                        <div class="wrap-login100-form-btn">
-                            <div class="login100-form-bgbtn"></div>
-                            <button onclick="/signup" class="login100-form-btn">
+                <div class="container-login100-form-btn">
+                    <div class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button onclick="location.href = '/signup';" class="login100-form-btn">
 								Customer Signup
 							</button>
-                        </div>
                     </div>
+                </div>
 
-                    <br /><br />
-
-                    <div class="container-login100-form-btn">
-                        <div class="wrap-login100-form-btn">
-                            <div class="login100-form-bgbtn"></div>
-                            <button onclick="/business/login" class="login100-form-btn">
+                <br />
+                <div class="text-center p-b-26">
+                    <span class="txt1 centertext">
+                            Run a shop and want to add it to the Circle? Click Business Signup.<br />
+                            If you are a business trying to access your dashboard and settings, choose the Business Login.
+						</span>
+                </div>
+                <br>
+                <div class="container-login100-form-btn">
+                    <div class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button onclick="location.href = '/business/login';" class="login100-form-btn">
 								Business Login
 							</button>
-                        </div>
                     </div>
+                </div>
 
-                    <div class="container-login100-form-btn">
-                        <div class="wrap-login100-form-btn">
-                            <div class="login100-form-bgbtn"></div>
-                            <button onclick="/business/singup" class="login100-form-btn">
+                <div class="container-login100-form-btn">
+                    <div class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button onclick="location.href = '/business/signup';" class="login100-form-btn">
 								Business Signup
 							</button>
-                        </div>
                     </div>
+                </div>
 
-
-                </form>
             </div>
         </div>
     </div>

@@ -29,12 +29,6 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
     };
 
 
-
-
-
-
-
-
     var input = document.getElementById('pac-input');
 
     var autocomplete = new google.maps.places.Autocomplete(input);
@@ -55,9 +49,9 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
         infowindow.open(map, marker);
         console.log("ins")
     });
-    
+
     autocomplete.addListener('place_changed', function() {
-        
+
         infowindow.close();
 
         var place = autocomplete.getPlace();
@@ -80,19 +74,19 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
         });
 
         marker.setVisible(true);
-        
+
         infowindowContent.children['place-name'].textContent = place.name;
         infowindowContent.children['place-id'].textContent = place.place_id;
         infowindowContent.children['place-address'].textContent =
             place.formatted_address;
-        
+
         ExportPlaceID = place.place_id;
         console.log(ExportPlaceID)
-        
-        document.getElementById("hiddenplaceid").value =ExportPlaceID;
-        document.getElementById("hiddenlocationid").value=str(place.place_id.location);
+
+        document.getElementById("hiddenplaceid").value = ExportPlaceID;
+        document.getElementById("hiddenlocationid").value = str(place.place_id.location);
         infowindow.open(map, marker);
-        
+
     });
 }
 
@@ -121,22 +115,23 @@ async function MapBrowse() { //https://developers.google.com/maps/documentation/
 
 
     const results = await fetchplaces();
-    var ArrayOfPlaceID = ['Eh1BZGVsYWlkZSBTdCwgQ292ZW50cnkgQ1YxLCBVSyIuKiwKFAoSCc8WV_S_S3dIEWZmR37TBd78EhQKEgmpkcdCETtaAhF6JYgyQ6D4xA','ChIJcUPaFltKd0gRXVDAnM3WjVA']
+    var ArrayOfPlaceID = ['Eh1BZGVsYWlkZSBTdCwgQ292ZW50cnkgQ1YxLCBVSyIuKiwKFAoSCc8WV_S_S3dIEWZmR37TBd78EhQKEgmpkcdCETtaAhF6JYgyQ6D4xA', 'ChIJcUPaFltKd0gRXVDAnM3WjVA']
 
-    for(i = 0;i<Object.keys(results).length;i++){
-    var request = {
-        placeId: results[i]
-    };
-    var service = new google.maps.places.PlacesService(map);
-    service.getDetails(request, function(place, status) {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
-          var marker = new google.maps.Marker({
-            map: map,
-            position: place.geometry.location
-          });
-        }});
+    for (i = 0; i < Object.keys(results).length; i++) {
+        var request = {
+            placeId: results[i]
+        };
+        var service = new google.maps.places.PlacesService(map);
+        service.getDetails(request, function(place, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location
+                });
+            }
+        });
     }
-    
+
 
 
 
@@ -147,8 +142,8 @@ async function MapBrowse() { //https://developers.google.com/maps/documentation/
         title:"Hello World!"
         
     }); */
-    
-    
+
+
 
 
 
@@ -173,9 +168,9 @@ async function MapBrowse() { //https://developers.google.com/maps/documentation/
         infowindow.open(map, marker);
         console.log("ins")
     });
-    
+
     autocomplete.addListener('place_changed', function() {
-        
+
         infowindow.close();
 
         var place = autocomplete.getPlace();
@@ -203,23 +198,66 @@ async function MapBrowse() { //https://developers.google.com/maps/documentation/
         infowindowContent.children['place-id'].textContent = place.place_id;
         infowindowContent.children['place-address'].textContent =
             place.formatted_address;
-        
+
         ExportPlaceID = place.place_id;
         console.log(ExportPlaceID)
-        
+
         //document.getElementById("hiddenplaceid").value =ExportPlaceID;
         infowindow.open(map, marker);
-        
+
     });
-    
+
 }
 
-async function fetchplaces(){
+function addGap() {
+    nav = document.getElementById("sidenav");
+    li = document.createElement("li");
+    a = document.createElement("a")
+    li.appendChild(a);
+    i = document.createElement("i")
+    a.appendChild(i)
+    p = document.createElement("p")
+    a.appendChild(p)
+    nav.appendChild(li);
+}
+
+function addtosidesidebar(text, href, bad) {
+    nav = document.getElementById("sidenav");
+    li = document.createElement("li");
+    a = document.createElement("a");
+    if (bad) {
+        a.style.color = "#f0342e";
+    }
+    a.href = href;
+    li.appendChild(a);
+    i = document.createElement("i");
+    i.className = "now-ui-icons location_pin";
+    a.appendChild(i);
+    p = document.createElement("p");
+    p.innerHTML = text;
+    a.appendChild(p);
+    nav.appendChild(li);
+}
+
+
+async function fetchplaces() {
     const res = await fetch('api/fetchplaces', {
         method: 'get',
-        
+
     });
-    const estimation = await res.json()
-    
+    var estimation = await res
+    console.log(estimation)
+    estimation = estimation.json()
+    addtosidesidebar("Place 1", "/", false);
+    addtosidesidebar("Place 2", "/", false);
+    addtosidesidebar("Place 3", "/", true);
+    addtosidesidebar("Place 4", "/", false);
+    addtosidesidebar("Place 5", "/", false);
+    addtosidesidebar("Place 6", "/", false);
+    addtosidesidebar("Place 7", "/", true);
+    addtosidesidebar("Place 8", "/", true);
+    addtosidesidebar("Place 9", "/", false);
+    addtosidesidebar("Place 10", "/", false);
+
     return estimation;
 }

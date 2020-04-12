@@ -25,54 +25,7 @@
                 </a>
             </div>
             <div class="sidebar-wrapper" id="sidebar-wrapper">
-                <ul class="nav">
-                    <li>
-                        <a href="/">
-                            <i class="now-ui-icons design_app"></i>
-                            <p>Home</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/request">
-                            <i class="now-ui-icons education_atom"></i>
-                            <p>Request a Shop</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/browse">
-                            <i class="now-ui-icons location_map-big"></i>
-                            <p>Browse Map</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <p> </p>
-                        </a>
-                    </li>
-                    <li class="active">
-                        <a href="/business/dashboard">
-                            <i class="activeicon now-ui-icons users_single-02"></i>
-                            <p>Business Dashboard</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/business/qr">
-                            <i class="now-ui-icons design_bullet-list-67"></i>
-                            <p>Scan QR Code</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/about">
-                            <i class="now-ui-icons text_caps-small"></i>
-                            <p>About</p>
-                        </a>
-                    </li>
-                    <li class="active-pro">
-                        <a href="/api/logout">
-                            <i class="now-ui-icons objects_key-25"></i>
-                            <p>Log Out</p>
-                        </a>
-                    </li>
+                <ul id="mainnav" class="nav">
                 </ul>
             </div>
         </div>
@@ -156,7 +109,7 @@
                                 <div class="table-responsive">
                                     <form method="POST" action="/calc" data-calc-form></form>
 
-                                    <table class="table" id ="apptable">
+                                    <table class="table" id="apptable">
                                         <thead class=" text-primary">
                                             <th>Name</th>
                                             <th>Phone Number</th>
@@ -175,6 +128,11 @@
             </div>
         </div>
     </div>
+
+    <script src="/static/js/login.js"></script>
+    <script>
+        init([false, false, false, false], [true, false, false])
+    </script>
     <!--   Core JS Files   -->
     <script src="/static/js/core/jquery.min.js"></script>
     <script src="/static/js/core/popper.min.js"></script>
@@ -233,66 +191,52 @@
 
 
 
-        
-    window.addEventListener('DOMContentLoaded', init);
 
-    
-       
+        window.addEventListener('DOMContentLoaded', init);
+
+
+
         const preview = document.querySelector('[data-preview]');
-        var table =  document.createElement("appttable2");
-        
-        async function init(){
-         
-        
-            
+        var table = document.createElement("appttable2");
+
+        async function init() {
+
+
+
             const results = await fetchEstimations();
-            
-            
-            var arrayofjson= JSON.parse(JSON.stringify(results));
-            
-            
+
+
+            var arrayofjson = JSON.parse(JSON.stringify(results));
+
+
             var html = '';
-            
+
             for (var i = 0; i < arrayofjson.length; i++) {
-                
-                html += '<tr><td>' + arrayofjson[i].username + '</td><td>' + arrayofjson[i].phonenumber + '</td><td>' + arrayofjson[i].healthcare + '</td><td class="text-right">' + new Date((arrayofjson[i].AppTime)).toLocaleTimeString()+ '</td></tr>';
+
+                html += '<tr><td>' + arrayofjson[i].username + '</td><td>' + arrayofjson[i].phonenumber + '</td><td>' + arrayofjson[i].healthcare + '</td><td class="text-right">' + new Date((arrayofjson[i].AppTime)).toLocaleTimeString() + '</td></tr>';
             }
-           
+
             $('#apptable tbody').append(html);
-        
 
 
 
 
 
-    };
+
+        };
 
         async function fetchEstimations() {
-             
-
-             const res = await fetch('/business/tabledata', {
-                 method: 'post',
- 
-                
-             });
-             const estimation = await res.json();
-             
-             return estimation;
-         }
-         
 
 
+            const res = await fetch('/business/tabledata', {
+                method: 'post',
 
 
+            });
+            const estimation = await res.json();
 
-        
-
-            
-
-
-
-
- 
+            return estimation;
+        }
     </script>
 </body>
 
