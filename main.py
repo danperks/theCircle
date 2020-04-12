@@ -411,24 +411,33 @@ def ReturnMatches():
     currentLocation =json.loads(request.data)
     radius = 0
     userID = request.cookies["auth"]
-    
+    TotalReturn = []
+    FutileCount = 0
     while len(Offers)< 6:
+        if FutileCount ==60:
+            break;
         radius = radius +1#increase radius by 1 point
         params={"lat":tuple([currentLocation["lat"]]),"long":tuple([currentLocation["lng"]]),"radius":tuple([radius]),"userID":tuple([userID])}#parameters for quert
-        SQLcursor.execute("SELECT \"GoogleIdentity\" FROM \"Establishments\" WHERE \"Latitude\" BETWEEN %(lat)s -%(radius)s AND %(lat)s +%(radius)s AND  \"Longitude\" BETWEEN %(long)s -%(radius)s AND %(long)s + %(radius)s",params)
+        SQLcursor.execute("SELECT \"GoogleIdentity\"  FROM \"Establishments\" WHERE \"Latitude\" BETWEEN %(lat)s -%(radius)s AND %(lat)s +%(radius)s AND  \"Longitude\" BETWEEN %(long)s -%(radius)s AND %(long)s + %(radius)s LIMIT 6",params)
         for row in SQLcursor.fetchall():#get all establishements within the lat and long range of the user , increases until 5 offers found
             LocalBusinessess.append(row[0])
-            print(row[0])##adds the businesses to the table of businesses
+            print("test")#adds the businesses to the table of businesses
           #gets all the unaimed appointments     
-        SQLsmt= ("SELECT * FROM \"Appointments\" WHERE \"businessID\" IN"+str(tuple(LocalBusinessess))+" AND \"userID\" = null")
+        SQLsmt= ("SELECT * FROM \"Appointments\" WHERE \"businessID\" IN"+str(tuple(LocalBusinessess))+" AND \"userID\" IS NULL")
         SQLcursor.execute(SQLsmt)
-        TotalReturn = []
+        #print(SQLsmt)
+        
         #print(SQLcursor.mogrify("SELECT \"appointmentID\" FROM \"Appointments\" WHERE \"businessID\" in ANY(%s)  AND \"userID\" = null"),tuple(LocalBusinessess)))
         for row in SQLcursor.fetchall():
+            #if row[2] in Offers:
+            #    continue
+            print("call")
             Offers.append(row[2])
-            TotalReturn.append(row)#append the offers
-        params["offers"] = Offers
-    ClaimSlotsSQL = ("UPDATE \"Appointments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" IN" + str(tuple([Offers])))
+            print(len(Offers))
+            TotalReturn.append(str(row[0])+":@:"+str(row[1])+":@:"+str(row[2])+":@:"+str(row[3]))#append the offers
+        #params["offers"] = Offers
+        FutileCount = FutileCount+1
+   #ClaimSlotsSQL = ("UPDATE \"Appointments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" IN" + str(tuple([Offers])))
     #SQLcursor.commit()      
 
     return jsfy(TotalReturn)
@@ -440,7 +449,7 @@ def BookSlot():
     SelectAppID = request.form["AppID"]
     userID = request.form["userID"]
 
-    parmas = {'u':tuple([userID]),'a':tuple([SelectAppID])}
+    params = {'u':tuple([userID]),'a':tuple([SelectAppID])}
      
     SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"userID\" in %(u)s ",params)
     returneddata =SQLcursor.fetchall()
