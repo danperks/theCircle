@@ -277,7 +277,7 @@ function getBusinessName(name) {
 
 async function fetchplaces() {
     const res = await fetch('api/fetchplaces', {
-        method: 'post',
+        method: 'get',
 
     });
     var estimation = await res;
