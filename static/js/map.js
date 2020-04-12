@@ -116,6 +116,7 @@ async function MapBrowse() { //https://developers.google.com/maps/documentation/
 
 
     const results = await fetchplaces();
+    console.log(results)
     var ArrayOfPlaceID = ['Eh1BZGVsYWlkZSBTdCwgQ292ZW50cnkgQ1YxLCBVSyIuKiwKFAoSCc8WV_S_S3dIEWZmR37TBd78EhQKEgmpkcdCETtaAhF6JYgyQ6D4xA', 'ChIJcUPaFltKd0gRXVDAnM3WjVA']
 
     for (i = 0; i < Object.keys(results).length; i++) {
@@ -256,16 +257,34 @@ function addtosidesidebarerror(text, bad) {
     a.appendChild(p);
     nav.appendChild(li);
 }
+// HERE HARRISON
+
+function getBusinessName(name) {
+    init()
+    var request = {
+        placeId: name,
+        fields: ['name', 'formatted_address', ]
+    };
+
+    var service = new google.maps.places.PlacesService(document.createElement('div'));
+    service.getDetails(request, function(place, status) {
+        saveDetails(place, status)
+    });
+
+    return [placename, addr]
+}
 
 
 async function fetchplaces() {
     const res = await fetch('api/fetchplaces', {
-        method: 'get',
+        method: 'post',
 
     });
     var estimation = await res;
+    console.log("estim")
     console.log(estimation)
     estimation = estimation.json()
+    console.log(estimation)
     navigator.geolocation.getCurrentPosition(
         function(position) {
             addtosidesidebar("Place 1", "/", false);
@@ -286,4 +305,6 @@ async function fetchplaces() {
             addtosidesidebarerror("Location Access Denied", true);
             addtosidesidebarerror("No Locations can be found", true);
         });
+
+    return estimation;
 }

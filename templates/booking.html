@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </nav>
-                <div style="text-align: center" class="limiter">
+                <div style="text-align: center; padding: 0 20px;" class="limiter">
                     <h2 class="title" style="padding-top: 80px; margin-bottom: 10px">Your Booking</h2>
                     <p class="card-title" style="padding-bottom: 10px;">Here are the details of your current booking.</p>
                     <div style="display: inline-block" class="container-login100">
@@ -102,10 +102,11 @@
                 const results = await fetchEstimations();
                 var result = JSON.stringify(results, null, 4);
                 new QRCode(document.getElementById("qr-code"), result)
+                console.log(results)
                 document.getElementById("name").innerHTML = results[0]
                 document.getElementById("number").innerHTML = results[1]
                 document.getElementById("time").innerHTML = results[2]
-                document.getElementById("id").innerHTML = results[2]
+                document.getElementById("ID").innerHTML = results[3]
             };
 
             async function fetchEstimations() {

@@ -48,3 +48,12 @@ body {
 #map #infowindow-content {
     display: inline;
 }
+
+.choicetitle {
+    padding-top: 40px;
+    margin-bottom: 10px
+}
+
+.choicesub {
+    padding-bottom: 10px;
+}

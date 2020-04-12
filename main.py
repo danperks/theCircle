@@ -404,8 +404,7 @@ def AddNewShopRequest():
     
     return "s"
 
-@app.route('/get5matches',methods=["POST"])
-
+@app.route('/api/getstores',methods=["POST"])
 def ReturnMatches():
     LocalBusinessess = []
     Offers = []
