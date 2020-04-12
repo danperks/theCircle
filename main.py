@@ -372,21 +372,23 @@ def ReturnMatches():
     currentLocation =json.loads(request.data)
     radius = 0
     userID = request.cookies["auth"]
+    
     while len(Offers)< 6:
         radius = radius +1#increase radius by 1 point
-        params={"lat":tuple([currentLocation[0]]),"long":tuple([currentLocation[1]]),"radius":tuple[radius],"userID":tuple([userID])}#parameters for quert
-        SQLcursor.execute("SELECT \"businessID\" FROM \"Establishments\" WHERE \"latitude\" BETWEEN %(lat)s AND (%(lat)s +%(radius)s) AND WHERE \"longitude\" BETWEEN %(long)s AND (%(long)s + %(radius)s)",params)
+        params={"lat":tuple([currentLocation["lat"]]),"long":tuple([currentLocation["lng"]]),"radius":tuple([radius]),"userID":tuple([userID])}#parameters for quert
+        SQLcursor.execute("SELECT \"GoogleIdentity\" FROM \"Establishments\" WHERE \"Latitude\" BETWEEN %(lat)s -%(radius)s AND %(lat)s +%(radius)s AND  \"Longitude\" BETWEEN %(long)s -%(radius)s AND %(long)s + %(radius)s",params)
         for row in SQLcursor.fetchall():#get all establishements within the lat and long range of the user , increases until 5 offers found
-            LocalBusinessess.append(row[0])##adds the businesses to the table of businesses
-        SQLstmt = "SELECT \"appointmentID\" FROM \"Appointments\" LIMIT 6  WHERE \"businessID\" in %s AND \"userID\" = null " #gets all the unclaimed appointments
-        SQLData = (LocalBusinessess)#pass data in
-        SQLcursor.execute(SQLstmt,LocalBusinessess)
+            LocalBusinessess.append(row[0])
+            print(row[0])##adds the businesses to the table of businesses
+          #gets all the unaimed appointments     
+        print(LocalBusinessess)#pass data in
+        SQLcursor.execute("SELECT \"appointmentID\" FROM \"Appointments\" WHERE \"businessID\" in %s AND \"userID\" = null ",tuple(LocalBusinessess).vals)
         for row in SQLcursor.fetchall():
             Offers.append(row[0])#append the offers
         params["offers"] = Offers
-        ClaimSlotsSQL = ("UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in %(offers)s",params)
-        SQLcursor.commit()
-    
+    #ClaimSlotsSQL = ("UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in %(offers)s",params)
+    #SQLcursor.commit()
+    print (Offers)
     
 
     
