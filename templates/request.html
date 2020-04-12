@@ -127,10 +127,10 @@
         form = document.getElementById("choices")
 
         for (var choice in json) {
-            result = getBusinessName(json[choice][0])
-            console.log(result)
-            name = result[0]
-            addr = result[1]
+            //result = getBusinessName(json[choice][0])
+            // console.log(result)
+            name = "filled from db"
+            addr = "filled from db"
             console.log(name, addr)
             title = document.createElement("h4");
             title.className = "title choicetitle"

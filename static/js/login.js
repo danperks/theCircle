@@ -118,6 +118,9 @@ function init(user, business, forceGPS, forceUser, forceBusiness) {
     var auth = getCookie("auth");
     var bauth = getCookie("bauth");
 
+    console.log(user)
+    console.log(business)
+
     if (forceGPS) {
         forceGPSfunc()
     }

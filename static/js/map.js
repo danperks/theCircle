@@ -260,7 +260,6 @@ function addtosidesidebarerror(text, bad) {
 // HERE HARRISON
 
 function getBusinessName(name) {
-    init();
     var request = {
         placeId: name,
         fields: ['name', 'formatted_address', ]
