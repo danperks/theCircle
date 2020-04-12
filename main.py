@@ -387,18 +387,19 @@ def ReturnMatches():
             LocalBusinessess.append(row[0])
             print(row[0])##adds the businesses to the table of businesses
           #gets all the unaimed appointments     
-        print(LocalBusinessess)#pass data in
-        SQLcursor.execute("SELECT \"appointmentID\" FROM \"Appointments\" WHERE \"businessID\" in %s AND \"userID\" = null ",tuple(LocalBusinessess).vals)
+        SQLsmt= ("SELECT * FROM \"Appointments\" WHERE \"businessID\" IN"+str(tuple(LocalBusinessess))+" AND \"userID\" = null")
+        SQLcursor.execute(SQLsmt)
+        TotalReturn = []
+        #print(SQLcursor.mogrify("SELECT \"appointmentID\" FROM \"Appointments\" WHERE \"businessID\" in ANY(%s)  AND \"userID\" = null"),tuple(LocalBusinessess)))
         for row in SQLcursor.fetchall():
-            Offers.append(row[0])#append the offers
+            Offers.append(row[2])
+            TotalReturn.append(row)#append the offers
         params["offers"] = Offers
-    #ClaimSlotsSQL = ("UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in %(offers)s",params)
-    #SQLcursor.commit()
-    print (Offers)
-    
+    ClaimSlotsSQL = ("UPDATE \"Appointments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" IN" + str(tuple([Offers]))
+    #SQLcursor.commit()      
 
     
-    return "recieved"
+    return jsfy(TotalReturn)
 
 
 @app.route('/api/BookSlot',methods=["POST"])
@@ -406,8 +407,22 @@ def ReturnMatches():
 def BookSlot():
     SelectAppID = request.form["AppID"]
     userID = request.form["userID"]
+
     parmas = {'u':tuple([userID]),'a':tuple([SelectAppID])}
+     
+    SQLcursor.execute("SELECT \"phoneNumber\" from users WHERE \"userID\" in %(u)s ",params)
+    returneddata =SQLcursor.fetchall()
     #rememeber to send off the text message
+    message = client.messages \
+    .create(
+         body="The Circle Booking Message . You have a booking,details to be viewed at https://thecircle.digital/QRCreator",
+         messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
+         to= returneddata[0][0]
+     )
+
+
+
+
     SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",parmas)
     return "slot booked"
 @app.route('/api/login', methods=["POST"])
