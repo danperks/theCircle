@@ -240,6 +240,23 @@ function addtosidesidebar(text, href, bad) {
     nav.appendChild(li);
 }
 
+function addtosidesidebarerror(text, bad) {
+    nav = document.getElementById("sidenav");
+    li = document.createElement("li");
+    a = document.createElement("a");
+    if (bad) {
+        a.style.color = "#f0342e";
+    }
+    li.appendChild(a);
+    i = document.createElement("i");
+    i.className = "now-ui-icons ui-1_simple-remove";
+    a.appendChild(i);
+    p = document.createElement("p");
+    p.innerHTML = text;
+    a.appendChild(p);
+    nav.appendChild(li);
+}
+
 
 async function fetchplaces() {
     const res = await fetch('api/fetchplaces', {
@@ -249,16 +266,24 @@ async function fetchplaces() {
     var estimation = await res;
     console.log(estimation)
     estimation = estimation.json()
-    addtosidesidebar("Place 1", "/", false);
-    addtosidesidebar("Place 2", "/", false);
-    addtosidesidebar("Place 3", "/", true);
-    addtosidesidebar("Place 4", "/", false);
-    addtosidesidebar("Place 5", "/", false);
-    addtosidesidebar("Place 6", "/", false);
-    addtosidesidebar("Place 7", "/", true);
-    addtosidesidebar("Place 8", "/", true);
-    addtosidesidebar("Place 9", "/", false);
-    addtosidesidebar("Place 10", "/", false);
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            addtosidesidebar("Place 1", "/", false);
+            addtosidesidebar("Place 2", "/", false);
+            addtosidesidebar("Place 3", "/", true);
+            addtosidesidebar("Place 4", "/", false);
+            addtosidesidebar("Place 5", "/", false);
+            addtosidesidebar("Place 6", "/", false);
+            addtosidesidebar("Place 7", "/", true);
+            addtosidesidebar("Place 8", "/", true);
+            addtosidesidebar("Place 9", "/", false);
+            addtosidesidebar("Place 10", "/", false);
+            return estimation;
 
-    return estimation;
+        }.bind(this),
+        function(error) {
+            console.log("[!] Location access allowed")
+            addtosidesidebarerror("Location Access Denied", true);
+            addtosidesidebarerror("No Locations can be found", true);
+        });
 }

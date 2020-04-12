@@ -4,7 +4,7 @@
 <head>
     <link rel="icon" type="image/png" href="/static/images/favicon.ico">
     <title>
-        The Circle - About
+        The Circle - Request a Slot
     </title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -45,26 +45,35 @@
                             </button>
                         </div>
 
-                        <a class="navbar-brand" style="color: black;">About Us</a>
+                        <a class="navbar-brand" style="color: black;">Dashboard</a>
                     </div>
                 </div>
             </nav>
             <div style="text-align: center">
                 <div style="display: inline-block; width: 50%; height: 100vh; padding-top: 60px;">
-                    <h2 class="title" style="padding-top: 40px; margin-bottom: 10px">The Circle</h2>
-                    <h5 class="card-title">
-                        Thanks for using The Circle.
-                        <br /> This project was made for the 2020 <a href="https://hackquarantine.com/">Hack Quarentine</a> hackathon.
-                        <br /> To read more about the project itself, <a href="https://devpost.com/software/the-circle">head to our submission page</a>
-                        <br /> <br /> This project was made by <a href="https://danperks.digital">Daniel Perks</a> and <a href="https://github.com/MonocledMajesticProductions">Harrison Duffield</a>
-                    </h5>
+                    <h2 class="title" style="padding-top: 40px; margin-bottom: 10px">Request a Slot</h2>
+                    <p class="card-title" style="padding-bottom: 10px;">Fill this form in to request a slot to shop at a local store.</p>
+                    <form class="login100-form validate-form" action="/api/login" method="POST">
 
-                    <h3 class="title" style="padding-top: 170px; margin-bottom: 10px">Contact Us</h3>
-                    <h5 class="card-title">
-                        For inqueries about the Circle or a booking on the Circle: <br />- Email: #### <br />- Discord: ####
-                        <br /><br />For inqueries about a certain store, contact the store in question directly
-                        <br /><br />To contact the developers directly, follow the links above to see our individual contact pages.
-                    </h5>
+                        <div class="wrap-input100">
+                            <input class="input100" type="text" name="number">
+                            <span class="focus-input100" data-placeholder="Phone Number"></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <input class="input100" type="password" name="password">
+                            <span class="focus-input100" data-placeholder="Password"></span>
+                        </div>
+
+                        <div class="container-login100-form-btn">
+                            <div class="wrap-login100-form-btn">
+                                <div class="login100-form-bgbtn"></div>
+                                <button class="login100-form-btn">
+                                    Login
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -72,7 +81,7 @@
 
     <script src=" /static/js/login.js "></script>
     <script>
-        init([false, false, false, true], [false, false, false, true])
+        init([false, true, false, false], [false, false, false])
     </script>
 
     <!--   Core JS Files   -->

@@ -1,3 +1,7 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function addGap() {
     nav = document.getElementById("mainnav");
     li = document.createElement("li");
@@ -63,16 +67,20 @@ function addtoSidebar(icon, text, href, active) {
 function addUserOptions(status, active) {
     addtoSidebar("location_compass-05", "Home", "/", active[0]);
     addtoSidebar("design_bullet-list-67", "Request a Slot", "/book", active[1]);
-    addtoSidebar("shopping_tag-content", "Add a Shop", "/addashop", active[3]);
-    addGap()
-    addLogin(status)
+    addtoSidebar("shopping_tag-content", "Add a Shop", "/addashop", active[2]);
+    addGap();
+    addtoSidebar("travel_info", "About / Contact", "/about", active[3]);
+    addGap();
+    addLogin(status);
 }
 
 function addBusinessOptions(status, active) {
     addtoSidebar("design_app", "Dashboard", "/business/dashboard", active[0]);
     addtoSidebar("tech_mobile", "Scan QR Codes", "/business/qr", active[1]);
     addGap();
-    addtoSidebar("location_map-big", "Browse Map", "/browse", active[2]);
+    addtoSidebar("location_map-big", "Browse Map", "/", active[2]);
+    addGap();
+    addtoSidebar("travel_info", "About / Contact", "/about", active[3]);
     addLogin(status);
 }
 
@@ -93,9 +101,27 @@ function getCookie(name) {
     return decodeURI(dc.substring(begin + prefix.length, end));
 }
 
+async function forceGPSfunc() {
+    await sleep(200);
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            console.log("[ ] Location access allowed")
+        }.bind(this),
+        function(error) {
+            console.log("[!] Location access allowed")
+            alert("This page requires location access to function properly.\n\nTo enable location services, click the Lock or Infomation symbol in the URL bar, and enable Location Access.");
+        })
+};
+
+
 function init(user, business, forceGPS, forceUser, forceBusiness) {
     var auth = getCookie("auth");
     var bauth = getCookie("bauth");
+
+    if (forceGPS) {
+        forceGPSfunc()
+    }
+
     if (auth == null && bauth == null) { // no auth tokens
         addUserOptions(false, user);
 

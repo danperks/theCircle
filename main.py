@@ -22,14 +22,15 @@ from datetime import datetime
 import time
 import threading
 
-
 from flask_sslify import SSLify
 
 import json
 import jsonify
 import urllib3
+
 #DECLERATION : As always, spelling and grammar mistakes withing comments are always for your enjoyment.
 #Bought to you by the tip of the Pagoda.
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 conn = psycopg2.connect(host="ec2-79-125-26-232.eu-west-1.compute.amazonaws.com",database="da68ui8vpnunpk", user="bbbtoniaagpfcc", password="a3927fb7aa06479e6146febe7c894fdeaec4bad7771fc74d8335bcc9f5cad4b4")
@@ -71,6 +72,9 @@ def copy_to_clip(text,loc): # Don't use single apostophe
     "clipboardHelper.copyString(text);"
     "}}</script>"
     return html
+
+# -------------------------- DB ---------------------------
+
 def CreateVerificationToken(UserID):
     SQL = "INSERT INTO public.\"VerificationCode\" (\"UserID\", \"VerificationCode\") VALUES (%s, %s);"
     VerificationCode = random.randint(0,99999)
@@ -133,6 +137,7 @@ def CheckVerificationCode(CodeToCheck):#returns true false and user id
         ChangeUserActivation(row[0])
         return (truefalse,row[0])
         break
+    
 def RemoveVerificationCode(UserID):
     params={'g':tuple([UserID])}
     SQLcursor.execute("DELETE FROM public.\"VerificationCode\" WHERE \"UserID\" in %(g)s",params)
@@ -164,12 +169,12 @@ def verify():
 @app.route('/login')
 def login():
     return render_template("/account/login.html")
-@app.route("/QRCreator")
+
+@app.route("/booking")
 def bCreate():
-    return render_template("QRGenerator.html")
+    return render_template("booking.html")
 
-
-@app.route('/QRPersonal',methods =['GET'])
+@app.route('/QRPersonal', methods=['GET'])
 def QRpersonalFunc():
     #userID = request.cookies["auth"]
     userID = 47
@@ -254,8 +259,8 @@ def returnPlaces():
         
     return jsfy(ArrayOfPlaceID)
 
-@app.route('/api/newbusiness',methods=["POST"])
-def newbusinessAPI(): 
+@app.route('/api/business/signup',methods=["POST"])
+def businessSignup(): 
     Output = request.form.to_dict()
     
         
@@ -282,6 +287,34 @@ def newbusinessAPI():
     conn.commit()
     return "fill in later "
     
+    
+@app.route('/api/business/login',methods=["POST"])
+def businessLogin(): 
+    Output = request.form.to_dict()
+    
+        
+    UniqueID = Output["spanname"]
+    LengthOfSession = Output["lengthofsession"]
+    LatLong = Output["LatLong"] 
+    AmountOfSlots = Output["AmountOfSlots"]
+    
+    pass1 = Output["password"]
+    pass2 = Output["passwordConf"]
+    LatLong = LatLong.split("(")[1]
+    LatLong =LatLong.split(")")[0]
+    Latitude = LatLong.split(",")[0]
+    Longitude = LatLong.split(",")[1]
+    
+    if pass1 != pass2:
+        error = "Your passwords did not match"
+        return redirect(url_for("/business/signUp",error=error))
+    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
+    
+    SQLInsertNewBusiness = "INSERT INTO \"Establishments\"(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\",\"Latitude\",\"Longitude\") VALUES (%s,%s,%s,%s,%s,%s,%s)"
+    InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash,Latitude,Longitude)
+    SQLcursor.execute(SQLInsertNewBusiness,InsertData)
+    conn.commit()
+    return "fill in later "
 
 
 @app.route('/api/signup', methods=["POST"])
@@ -395,9 +428,7 @@ def ReturnMatches():
     #ClaimSlotsSQL = ("UPDATE \"Appoitments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" in %(offers)s",params)
     #SQLcursor.commit()
     print (Offers)
-    
-
-    
+   
     return "recieved"
 
 
@@ -410,6 +441,7 @@ def BookSlot():
     #rememeber to send off the text message
     SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",parmas)
     return "slot booked"
+
 @app.route('/api/login', methods=["POST"])
 def loginAPI():
     if "number" in request.form and "password" in request.form:
@@ -455,8 +487,8 @@ def requestShop():
     return render_template("addashop.html")
 
 @app.route('/book')
-def bookaslot():
-    return render_template("book.html")
+def requestaslot():
+    return render_template("request.html")
 
 @app.route('/about')
 def About():
@@ -483,8 +515,6 @@ def page_not_found(e):
 def index():
     return render_template("index new.html")
 
-
-
 def midnightRun():
     time.sleep(10)
     while True:
@@ -498,7 +528,7 @@ def midnightRun():
 
 if __name__ == '__main__':
     
-    debug = False
+    debug = True
     
     t = threading.Thread(target=midnightRun)
     t.start()
