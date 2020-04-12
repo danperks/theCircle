@@ -297,15 +297,15 @@ def businessLogin():
     UniqueID = request.form["spanname"]
     password = request.form["password"]
         
-    passwordhash = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
+   # passwordhash = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
     statement = 'SELECT \"passHash\",\"GoogleIdentity\" FROM "Establishments"'
     SQLcursor.execute(statement)
     checkhash = SQLcursor.fetchall()
     resp = make_response(generate_popup("You have logged in successfully","/"))
     for item in checkhash:
         if item[1] == UniqueID:
-            print(passwordhash)
-            if bcrypt.checkpw(item[0].encode("utf-8"), passwordhash.encode("utf-8")):
+           # print(passwordhash)
+            if bcrypt.checkpw(password.encode("utf-8"), item[0].encode("utf-8")):
                 print("worked")
                 resp = make_response(generate_popup("You have logged in successfully","/"))
                 resp.set_cookie('bauth', UniqueID)
