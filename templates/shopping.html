@@ -25,7 +25,7 @@
     async function fetchEstimations(data) {
              //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
             console.log("called")
-            await fetch('/get5matches', {
+            await fetch('/api/getstores', {
                 method: 'post',
                 body:JSON.stringify(data)
                 

@@ -90,16 +90,31 @@
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             }
-        JSONFillOut = await fetchEstimations(pos);
+            console.log(pos)
+        
+        
+        console.log("ca")
+        const JSONFillOut = await fetchEstimations(pos);
+        console.log(JSONFillOut)
+        });
+        }
+        
+    
+    
+        
         async function fetchEstimations(data) {
              //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
             console.log("called")
-            await fetch('/get5matches', {
+            const res = await fetch('/api/getstores', {
                 method: 'post',
                 body:JSON.stringify(data)
                 
             });
-        JSON =
+            const estimation = await res.json();
+            return estimation;
+
+        }
+        console.log(JSONFillOut[0])
         json = [
             ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
             ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
@@ -141,6 +156,7 @@
             button.appendChild(buttoninner)
             form.appendChild(button)
         }
+        
     </script>
 
 

@@ -432,13 +432,15 @@ def ReturnMatches():
             #if row[2] in Offers:
             #    continue
             print("call")
-            Offers.append(row[2])
+            Offers.append(row[3])
             print(len(Offers))
             TotalReturn.append(str(row[0])+":@:"+str(row[1])+":@:"+str(row[2])+":@:"+str(row[3]))#append the offers
         #params["offers"] = Offers
         FutileCount = FutileCount+1
-   #ClaimSlotsSQL = ("UPDATE \"Appointments\" SET \"userID\" = %(userID)s WHERE \"appointmentID\" IN" + str(tuple([Offers])))
-    #SQLcursor.commit()      
+    if len(Offers)>0:
+        print("")
+        #SQLcursor.execute("UPDATE \"Appointments\" SET \"userID\" = "+userID+" WHERE \"appointmentID\" IN" + str(tuple(Offers)))
+    conn.commit()      
 
     return jsfy(TotalReturn)
 
