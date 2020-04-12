@@ -82,9 +82,16 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
 
         ExportPlaceID = place.place_id;
         console.log(ExportPlaceID)
+<<<<<<< HEAD
 
         document.getElementById("hiddenplaceid").value = ExportPlaceID;
         document.getElementById("hiddenlocationid").value = str(place.place_id.location);
+=======
+        
+        document.getElementById("hiddenplaceid").value =ExportPlaceID;
+        console.log(place.geometry.location);
+        document.getElementById("hiddenlocationid").value=place.geometry.location.toString();
+>>>>>>> 0c95216eb69224c08933e73741d459a781a01ad2
         infowindow.open(map, marker);
 
     });
