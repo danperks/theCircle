@@ -84,7 +84,22 @@
             console.log(index)
             return "done";
         }
-
+        if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(async function(position) {
+            var pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            }
+        JSONFillOut = await fetchEstimations(pos);
+        async function fetchEstimations(data) {
+             //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
+            console.log("called")
+            await fetch('/get5matches', {
+                method: 'post',
+                body:JSON.stringify(data)
+                
+            });
+        JSON =
         json = [
             ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
             ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
