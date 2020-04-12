@@ -246,7 +246,7 @@ async function fetchplaces() {
         method: 'get',
 
     });
-    var estimation = await res
+    var estimation = await res;
     console.log(estimation)
     estimation = estimation.json()
     addtosidesidebar("Place 1", "/", false);
