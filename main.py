@@ -27,6 +27,7 @@ from flask_sslify import SSLify
 import json
 import jsonify
 import urllib3
+from _datetime import timedelta
 
 #DECLERATION : As always, spelling and grammar mistakes withing comments are always for your enjoyment.
 #Bought to you by the tip of the Pagoda.
@@ -541,6 +542,33 @@ def midnightRun():
         print("It's midnight, flushing database")
         SQLcursor.execute("DELETE FROM \"Appointments\ RETURNING *")#table cleared
         SQLcursor.execute("SELECT \"GoogleIdentity\",\"LengthOfSlot\",\"SlotsPerHour\" FROM \"Establishments\"")
+        EstabLi = SQLcursor.fetchall()
+        daynumber = datetime.today().weekday()
+        for row in EstabLi:
+            url = "https://maps.googleapis.com/maps/api/place/details/json?place_id="+row[0]+"&fields=opening_hours/weekday_text&key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms"
+            response = requests.get(url).json()
+            if(response.get("result")):
+                Times  = response["result"]["opening_hours"]["weekday_text"][daynumber]
+    
+                OpeningTime = Times.split("day:")[1].split(" – ")[0].strip(" ")
+                ClosingTime = Times.split(" – ")[1].strip(" ")
+                OpeningTime = datetime.strptime(OpeningTime, '%I:%M %p')#.strftime("%H:%M")
+                ClosingTime = datetime.strptime(ClosingTime, '%I:%M %p')#.strftime("%H:%M")
+      
+                CurrentTimeCount =OpeningTime#-timedelta(hours =0,minutes=int(row[1]))
+                LastSlot =  ClosingTime-timedelta(hours =0,minutes=int(row[1]))
+                while CurrentTimeCount != LastSlot:
+                    for i in range(0,int(row[2])):
+                        SQLstmt = ("INSERT INTO \"Appointments\"(\"startTime\",\"businessID\") VALUES('"+CurrentTimeCount.strftime("%H:%M")+"','"+row[0]+"')")
+                        SQLcursor.execute(SQLstmt)
+                        CurrentTimeCount=CurrentTimeCount+timedelta(hours =0,minutes=int(row[1]))
+                print("Shop Done"+row[0])
+          
+
+      
+            else:
+                print("No Data Returned")
+                continue;
 
 
 if __name__ == '__main__':
