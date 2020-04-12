@@ -187,7 +187,7 @@ def QRpersonalFunc():
         ApptTime = row[1]
         break;
     
-    return jsfy(userName,PhoneNumber,ApptTime)
+    return jsfy(userName,PhoneNumber,ApptTime,row[2])
 
 @app.route('/shopping')
 def shoppingreroute():
@@ -509,6 +509,8 @@ def midnightRun():
         print("Waiting " + str(t2midnight) + " seconds until midnight")
         time.sleep(t2midnight)
         print("It's midnight, flushing database")
+        SQLcursor.execute("DELETE FROM \"Appointments\ RETURNING *")#table cleared
+        SQLcursor.execute("SELECT \"GoogleIdentity\",\"LengthOfSlot\",\"SlotsPerHour\" FROM \"Establishments\"")
 
 
 if __name__ == '__main__':
