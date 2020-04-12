@@ -273,49 +273,46 @@ def businessSignup():
     pass1 = Output["password"]
     pass2 = Output["passwordConf"]
     LatLong = LatLong.split("(")[1]
-    LatLong =LatLong.split(")")[0]
+    LatLong = LatLong.split(")")[0]
     Latitude = LatLong.split(",")[0]
     Longitude = LatLong.split(",")[1]
     
     if pass1 != pass2:
-        error = "Your passwords did not match"
-        return redirect(url_for("/business/signUp",error=error))
+        return redirect(url_for("/business/signup",error="Your passwords did not match"))
     passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
     
     SQLInsertNewBusiness = "INSERT INTO \"Establishments\"(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\",\"Latitude\",\"Longitude\") VALUES (%s,%s,%s,%s,%s,%s,%s)"
     InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash,Latitude,Longitude)
     SQLcursor.execute(SQLInsertNewBusiness,InsertData)
-    conn.commit()
-    return "fill in later "
+    try:
+        conn.commit()
+    except psycopg2.errors.UniqueViolation:
+        return generate_popup("Your business has already been signed up. You will now be taken to the login page.","/business/login")
+    return redirect(url_for("/business/dashboard",error="Your business has been successfully added! You will now be added to "))
     
     
 @app.route('/api/business/login',methods=["POST"])
 def businessLogin(): 
-    Output = request.form.to_dict()
     
+    UniqueID = request.form["spanname"]
+    password = request.form["password"]
         
-    UniqueID = Output["spanname"]
-    LengthOfSession = Output["lengthofsession"]
-    LatLong = Output["LatLong"] 
-    AmountOfSlots = Output["AmountOfSlots"]
-    
-    pass1 = Output["password"]
-    pass2 = Output["passwordConf"]
-    LatLong = LatLong.split("(")[1]
-    LatLong =LatLong.split(")")[0]
-    Latitude = LatLong.split(",")[0]
-    Longitude = LatLong.split(",")[1]
-    
-    if pass1 != pass2:
-        error = "Your passwords did not match"
-        return redirect(url_for("/business/signUp",error=error))
-    passwordhash = bcrypt.hashpw(pass1.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
-    
-    SQLInsertNewBusiness = "INSERT INTO \"Establishments\"(\"GoogleIdentity\", \"LengthOfSlot\", \"SlotsPerHour\", \"Verified\", \"passHash\",\"Latitude\",\"Longitude\") VALUES (%s,%s,%s,%s,%s,%s,%s)"
-    InsertData = (UniqueID,LengthOfSession,AmountOfSlots,False,passwordhash,Latitude,Longitude)
-    SQLcursor.execute(SQLInsertNewBusiness,InsertData)
-    conn.commit()
-    return "fill in later "
+    passwordhash = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt(12)).decode('utf-8')
+    statement = 'SELECT \"passHash\",\"GoogleIdentity\" FROM "Establishments"'
+    SQLcursor.execute(statement)
+    checkhash = SQLcursor.fetchall()
+    resp = make_response(generate_popup("You have logged in successfully","/"))
+    for item in checkhash:
+        if item[1] == UniqueID:
+            print(passwordhash)
+            if bcrypt.checkpw(item[0].encode("utf-8"), passwordhash.encode("utf-8")):
+                print("worked")
+                resp = make_response(generate_popup("You have logged in successfully","/"))
+                resp.set_cookie('bauth', UniqueID)
+                return resp
+
+    print("didnt work")
+    return generate_popup("Your details were incorrect","/business/login")
 
 
 @app.route('/api/signup', methods=["POST"])
@@ -462,10 +459,6 @@ def BookSlot():
          messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
          to= returneddata[0][0]
      )
-
-
-
-
     SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",parmas)
     return "slot booked"
 
