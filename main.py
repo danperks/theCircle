@@ -121,7 +121,7 @@ def SendTwilioVerificationCode(VerificationCode,UserID):
 
     message = client.messages \
     .create(
-         body="The Circle Test message "+ str(VerificationCode),
+         body="The Circle Verification message "+ str(VerificationCode),
          messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
          to= returneddata[0][0]
      )
@@ -177,8 +177,8 @@ def bCreate():
 
 @app.route('/QRPersonal', methods=['GET'])
 def QRpersonalFunc():
-    #userID = request.cookies["auth"]
-    userID = 47
+    userID = request.cookies["auth"]
+    #userID = 48
     params = {'y':tuple([userID])}
     output = ""
     userName = GetUserName(userID)
@@ -190,9 +190,9 @@ def QRpersonalFunc():
     
     SQLcursor.execute('SELECT * FROM \"Appointments\" WHERE \"userID\" in %(y)s',params)
     for row in SQLcursor.fetchall():
-        ApptTime = row[1]
+        ApptTime = str(row[1])
         break;
-    
+    #print(ApptTime)
     return jsfy(userName,PhoneNumber,ApptTime,row[2])
 
 @app.route('/shopping')
@@ -456,11 +456,11 @@ def BookSlot():
     #rememeber to send off the text message
     message = client.messages \
     .create(
-         body="The Circle Booking Message . You have a booking,details to be viewed at https://thecircle.digital/QRCreator",
+         body="The Circle Booking Message . You have a booking,details to be viewed at https://thecircle.digital/booking",
          messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
          to= returneddata[0][0]
      )
-    SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",parmas)
+    SQLcursor.execute("DELETE FROM \"Appointments\" WHERE \"userID\" in %(u)s  AND \"appointmentID\" ! in %(a)s ",params)
     return "slot booked"
 
 @app.route('/api/login', methods=["POST"])
