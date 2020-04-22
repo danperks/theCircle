@@ -79,7 +79,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places" async defer></script>
     <script src="/static/js/map.js"></script>
 
-    <script async>
+    <script>
         async function choose(index) {
             console.log(index)
             return "done";
@@ -116,54 +116,60 @@
         }
         //console.log(JSONFillOut[0])
 
-        json = [
-            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
-            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
-            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
-            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
-            ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"]
-        ]
+        async function main() {
+            await sleep(1500);
 
-        form = document.getElementById("choices")
+            json = [
+                ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+                ["ChIJW1KbC8uacEgRqSOHOmvVbWE", "15/03", "8:00"],
+                ["ChIJ--paGMuacEgRns_nr4yHTTg", "15/03", "8:00"],
+                ["ChIJ--paGMuacEgRns_nr4yHTTg", "15/03", "15:00"],
+                ["ChIJF6fyODKFcEgRZpzbgI7aM9g", "16/03", "14:30"]
+            ]
 
-        for (var choice in json) {
+            form = document.getElementById("choices")
 
-            name = json[choice][0]
+            for (var choice in json) {
 
-            var request = {
-                placeId: name,
-                fields: ['name', 'formatted_address', ]
+                name = json[choice][0]
+
+                var request = {
+                    placeId: name,
+                    fields: ['name', 'formatted_address', ]
+                };
+
+                var service = new google.maps.places.PlacesService(document.createElement('div'));
+                service.getDetails(request, function(place, status) {
+                    busname = place.name
+                    addr = place.formatted_address
+                    title = document.createElement("h4");
+                    title.className = "title choicetitle"
+                    title.innerHTML = busname + " - " + json[choice][1] + " " + json[choice][2]
+                    form.appendChild(title)
+                    subtitle = document.createElement("p");
+                    subtitle.className = "card-title choicesub"
+                    subtitle.innerHTML = addr
+                    form.appendChild(subtitle)
+                    button = document.createElement("div");
+                    button.className = "container-login100-form-btn"
+                    button.style.padding = "0 10px"
+                    buttoninner = document.createElement("div")
+                    buttoninner.className = "wrap-login100-form-btn"
+                    buttoninnerinner = document.createElement("div")
+                    buttoninnerinner.className = "login100-form-bgbtn"
+                    buttoninner.appendChild(buttoninnerinner)
+                    actualbutton = document.createElement("button")
+                    actualbutton.className = "login100-form-btn"
+                    actualbutton.onclick = "choose(" + choice + ")"
+                    actualbutton.innerHTML = "Choice this option"
+                    buttoninner.appendChild(actualbutton)
+                    button.appendChild(buttoninner)
+                    form.appendChild(button)
+                });
             };
-
-            var service = new google.maps.places.PlacesService(document.createElement('div'));
-            service.getDetails(request, function(place, status) {
-                busname = place.name
-                addr = place.formatted_address
-                title = document.createElement("h4");
-                title.className = "title choicetitle"
-                title.innerHTML = busname + " - " + json[choice][1] + " " + json[choice][2]
-                form.appendChild(title)
-                subtitle = document.createElement("p");
-                subtitle.className = "card-title choicesub"
-                subtitle.innerHTML = addr
-                form.appendChild(subtitle)
-                button = document.createElement("div");
-                button.className = "container-login100-form-btn"
-                button.style.padding = "0 10px"
-                buttoninner = document.createElement("div")
-                buttoninner.className = "wrap-login100-form-btn"
-                buttoninnerinner = document.createElement("div")
-                buttoninnerinner.className = "login100-form-bgbtn"
-                buttoninner.appendChild(buttoninnerinner)
-                actualbutton = document.createElement("button")
-                actualbutton.className = "login100-form-btn"
-                actualbutton.onclick = "choose(" + choice + ")"
-                actualbutton.innerHTML = "Choice this option"
-                buttoninner.appendChild(actualbutton)
-                button.appendChild(buttoninner)
-                form.appendChild(button)
-            });
         }
+
+        main()
     </script>
 
 
