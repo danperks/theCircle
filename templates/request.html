@@ -61,6 +61,7 @@
             </div>
         </div>
     </div>
+    <div id="test"></div>
 
     <script src=" /static/js/login.js "></script>
     <script>
@@ -76,75 +77,105 @@
 
     <script src="/static/vendor/jquery/jquery-3.2.1.min.js "></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places" async defer></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places" async defer></script> -->
     <script src="/static/js/map.js"></script>
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms&libraries=places" type="text/javascript"></script>
 
-    <script>
-        async function choose(index) {
-            console.log(index)
-            return "done";
-        }
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async function(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                }
-                console.log(pos)
-
-
-                console.log("ca")
-                const JSONFillOut = await fetchEstimations(pos);
-                console.log(JSONFillOut)
-            });
-        }
+    <<<<<<< HEAD <script>
+        =======
+        <script async>
+            >>> >>> > da615d56c02184a47176d1ba2d25c7fc36a14bb1
+            async function choose(index) {
+                console.log(index)
+                return "done";
+            }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    }
+                    console.log(pos)
 
 
+                    console.log("ca")
+                    const JSONFillOut = await fetchEstimations(pos);
+                    console.log(JSONFillOut)
+                    Do();
+
+                });
+            }
 
 
-        async function fetchEstimations(data) {
-            //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
-            console.log("called")
-            const res = await fetch('/api/getstores', {
-                method: 'post',
-                body: JSON.stringify(data)
 
-            });
-            const estimation = await res.json();
-            return estimation;
 
-        }
-        //console.log(JSONFillOut[0])
+            async function fetchEstimations(data) {
+                //DONT THINK A PAYLOAD IS NEEDED BUT ITS THERE SO ...
+                console.log("called")
+                const res = await fetch('/api/getstores', {
+                    method: 'post',
+                    body: JSON.stringify(data)
 
-        async function main() {
-            await sleep(1500);
+                });
+                const estimation = await res.json();
+                return estimation;
 
-            json = [
-                ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
-                ["ChIJW1KbC8uacEgRqSOHOmvVbWE", "15/03", "8:00"],
-                ["ChIJ--paGMuacEgRns_nr4yHTTg", "15/03", "8:00"],
-                ["ChIJ--paGMuacEgRns_nr4yHTTg", "15/03", "15:00"],
-                ["ChIJF6fyODKFcEgRZpzbgI7aM9g", "16/03", "14:30"]
-            ]
+            }
+            //console.log(JSONFillOut[0])
 
-            form = document.getElementById("choices")
 
-            for (var choice in json) {
-
-                name = json[choice][0]
-
+            async function getBusinessName(name) {
                 var request = {
                     placeId: name,
-                    fields: ['name', 'formatted_address', ]
-                };
+                    fields: ['name', 'formatted_address']
+                }
+                var service = new google.maps.places.PlacesService(document.createElement("div"));
 
-                var service = new google.maps.places.PlacesService(document.createElement('div'));
-                service.getDetails(request, function(place, status) {
-                    busname = place.name
-                    addr = place.formatted_address
+                await service.getDetails(request, function(place, status) {
+
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+                        console.log(place.formatted_address)
+                        global = place.formatted_address;
+                        return global;
+
+                    } else {
+                        return "ero"
+                    }
+                });
+
+
+
+            };
+
+            async function Do() {
+                json = [
+                    ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+                    ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+                    ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+                    ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"],
+                    ["ChIJZ_PIRpGbcEgRNjg0kQBB3g0", "14/03", "13:00"]
+                ]
+
+
+                form = document.getElementById("choices")
+
+                //var promise = new Promise();
+                //console.log( await getBusinessName(json[0]))
+                //await console.log()
+                for (var choice in json) {
+                    console.log(json[0])
+                    console.log(await getBusinessName(json[choice][0]));
+                    result = await getBusinessName(json[choice][0]);
+                    console.log(result);
+                    name = await getBusinessName(json[choice][0]);
+                    addr = await getBusinessName(json[choice][1]);
+                    break;
+                    //console.log(result)
+                    //console.log(name, toString(addr))
                     title = document.createElement("h4");
                     title.className = "title choicetitle"
-                    title.innerHTML = busname + " - " + json[choice][1] + " " + json[choice][2]
+                    title.innerHTML = name + " - " + json[choice][1] + " " + json[choice][2]
                     form.appendChild(title)
                     subtitle = document.createElement("p");
                     subtitle.className = "card-title choicesub"
@@ -165,12 +196,9 @@
                     buttoninner.appendChild(actualbutton)
                     button.appendChild(buttoninner)
                     form.appendChild(button)
-                });
-            };
-        }
-
-        main()
-    </script>
+                }
+            }
+        </script>
 
 
 </body>
