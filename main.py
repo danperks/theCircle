@@ -483,12 +483,17 @@ def loginAPI():
         elif False: # if invalid
             message = "The information you entered was not correct. Please double check the form and try again."
             generate_popup(message,"/login")
+            return "s"
         else: # should never run
             message = "An error occured. Please double check the form and try again. Please contact us if this continues to happen."
             generate_popup(message,"/login")
+            return "s"
     else:
         message = "Not all the required infomation was entered. Please double check the form and try again."
         generate_popup(message, "/login")
+        return "error"
+    
+    
         
 @app.route('/api/logout')
 def logout():
@@ -577,6 +582,7 @@ def midnightRun():
             else:
                 print("No Data Returned")
                 continue;
+    return "d"
 
 
 if __name__ == '__main__':

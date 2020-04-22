@@ -92,7 +92,7 @@ function initMap() { //https://developers.google.com/maps/documentation/javascri
 }
 
 
-
+var results;
 
 async function MapBrowse() { //https://developers.google.com/maps/documentation/javascript/geolocation
     var map, infoWindow;
@@ -115,7 +115,7 @@ async function MapBrowse() { //https://developers.google.com/maps/documentation/
     };
 
 
-    const results = await fetchplaces();
+    results = await fetchplaces();
     console.log(results)
     var ArrayOfPlaceID = ['Eh1BZGVsYWlkZSBTdCwgQ292ZW50cnkgQ1YxLCBVSyIuKiwKFAoSCc8WV_S_S3dIEWZmR37TBd78EhQKEgmpkcdCETtaAhF6JYgyQ6D4xA', 'ChIJcUPaFltKd0gRXVDAnM3WjVA']
 
@@ -259,19 +259,33 @@ function addtosidesidebarerror(text, bad) {
 }
 // HERE HARRISON
 
-function getBusinessName(name) {
+ async function getBusinessName(name) {
     var request = {
         placeId: name,
-        fields: ['name', 'formatted_address', ]
-    };
-
-    var service = new google.maps.places.PlacesService(document.createElement('div'));
-    service.getDetails(request, function(place, status) {
-        saveDetails(place, status)
+        fields: ['name', 'formatted_address']
+    }
+    
+    var service = new google.maps.places.PlacesService(document.createElement("div"));
+    
+    await service.getDetails(request, function(place, status) {
+        
+        if(status === google.maps.places.PlacesServiceStatus.OK){
+           
+            console.log(place.formatted_address)
+            console.log(place.name)
+            return place.name;
+            
+        }
+        else{
+            return "ero"
+        }
     });
+    
 
-    return [placename, addr]
+    
 };
+
+
 
 
 async function fetchplaces() {
@@ -279,15 +293,21 @@ async function fetchplaces() {
         method: 'get',
 
     });
-    var estimation = await res;
-    console.log("estim")
+    var estimation = await res.json();
+     //estimation = estimation.json()
     console.log(estimation)
-    estimation = estimation.json()
-    console.log(estimation)
+    ///Promise.then(estimation => estimation.data);
     navigator.geolocation.getCurrentPosition(
-        function(position) {
-            addtosidesidebar("Place 1", "/", false);
-            addtosidesidebar("Place 2", "/", false);
+        async function(position) {
+            for(var i =0;i<estimation.length;i++){
+                
+                var returnedname = await getBusinessName(estimation[i]);
+                
+                addtosidesidebar(returnedname, "/", true);
+                console.log(returnedname);
+                break;
+            }
+            /* addtosidesidebar("Place 2", "/", false);
             addtosidesidebar("Place 3", "/", true);
             addtosidesidebar("Place 4", "/", false);
             addtosidesidebar("Place 5", "/", false);
@@ -295,7 +315,7 @@ async function fetchplaces() {
             addtosidesidebar("Place 7", "/", true);
             addtosidesidebar("Place 8", "/", true);
             addtosidesidebar("Place 9", "/", false);
-            addtosidesidebar("Place 10", "/", false);
+            addtosidesidebar("Place 10", "/", false); */
             return estimation;
 
         }.bind(this),
