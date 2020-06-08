@@ -33,8 +33,9 @@ from _datetime import timedelta
 #Bought to you by the tip of the Pagoda.
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-conn = psycopg2.connect(os.environ["DATABASE_URL"])
+conn = psycopg2.connect("postgres://rognadojzzebyy:c4065a7a22083aa1c7f9e15390c651bd79a4dc246563ef21aae47eccf16658d2@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/d7sl752bcn7e0t")
+if "DATABASE_URL" in os.environ:
+    conn = psycopg2.connect(os.environ["DATABASE_URL"])
 SQLcursor = conn.cursor()
 
 account_sid = 'AC8dccea54e5befc531e46bb8a02fe61fa'
@@ -47,7 +48,6 @@ app.template_folder = "templates"
 
 if 'DYNO' in os.environ:
     sslify = SSLify(app)
-
 
 class Appointment(object):
     def __init__(self,username:str,phonenumber:str,healthcare:str,AppTime:str):
