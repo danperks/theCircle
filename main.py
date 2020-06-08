@@ -34,7 +34,7 @@ from _datetime import timedelta
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-conn = psycopg2.connect(host="ec2-79-125-26-232.eu-west-1.compute.amazonaws.com",database="da68ui8vpnunpk", user="bbbtoniaagpfcc", password="a3927fb7aa06479e6146febe7c894fdeaec4bad7771fc74d8335bcc9f5cad4b4")
+conn = psycopg2.connect(os.environ["DATABASE_URL"])
 SQLcursor = conn.cursor()
 
 account_sid = 'AC8dccea54e5befc531e46bb8a02fe61fa'
