@@ -46,9 +46,6 @@ app = Flask(__name__)
 app.static_folder = "static"
 app.template_folder = "templates"
 
-if 'DYNO' in os.environ:
-    sslify = SSLify(app)
-
 class Appointment(object):
     def __init__(self,username:str,phonenumber:str,healthcare:str,AppTime:str):
         self.username = username
