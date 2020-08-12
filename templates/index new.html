@@ -93,6 +93,33 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0Gd7eLG_-vSxbOEuLOVIqj5v1BCBn1Gc&libraries=places&callback=MapBrowse" async defer></script>
     <script src="/static/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="/static/js/main.js"></script>
+    <script>
+        
+        if (getCookie("first_visit") != "true") {//https://stackoverflow.com/a/37890891
+            document.cookie = "first_visit=true";
+            window.alert("This Project is now deprecated. The API's have largely been withdrawn, and anything remaining serves as a hardcoded visual aid. A video demonstration and further information can be found on our about page.")
+            location.href="/about";    
+            
+        }
+
+
+   //from http://www.w3schools.com/js/js_cookies.asp
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length,c.length);
+            }
+        }
+        return "";
+    }   
+    
+    </script>
 </body>
 
 </html>
