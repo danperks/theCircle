@@ -1,7 +1,6 @@
 import datetime
 import os
 import requests
-import urllib.parse as urlencode
 import random
 import bcrypt
 import psycopg2
@@ -44,6 +43,8 @@ auth_token = '386ca0c98d54557cb24a72fb1f8e7784'
 client = Client(account_sid, auth_token)
 
 app = Flask(__name__)
+if "DYNO" in os.environ:
+    sslify = SSLify(app)
 app.static_folder = "static"
 app.template_folder = "templates"
 
