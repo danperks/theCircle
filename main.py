@@ -527,19 +527,24 @@ def loginAPI():
         params = {'g': g}
         SQLcursor.execute(
             'SELECT \"passHash\",\"userID\" FROM users WHERE \"phoneNumber\" in %(g)s', params)
-        for row in SQLcursor.fetchall():
-            storedpassword = row[0]
-            authkey = int(row[1])
-            break
-        if bcrypt.checkpw(password.encode('utf-8'), storedpassword.encode('utf-8')):  # if valid
-            resp = make_response(redirect("/"))
-            # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
-            resp.set_cookie('auth', str(authkey))
-            return resp
-        elif False:  # if invalid
-            message = "The information you entered was not correct. Please double check the form and try again."
-            return generate_popup(message, "/login")
-        else:  # should never run
+        rows = SQLcursor.fetchall()
+        if len(rows) > 0:
+            for row in SQLcursor.fetchall():
+                storedpassword = row[0]
+                authkey = int(row[1])
+                break
+            if bcrypt.checkpw(password.encode('utf-8'), storedpassword.encode('utf-8')):  # if valid
+                resp = make_response(redirect("/"))
+                # change xxx to auth key - ive changed this to just use the user id for now - can check up on later
+                resp.set_cookie('auth', str(authkey))
+                return resp
+            elif False:  # if invalid
+                message = "The information you entered was not correct. Please double check the form and try again."
+                return generate_popup(message, "/login")
+            else:  # should never run
+                message = "An error occured. Please double check the form and try again. Please contact us if this continues to happen."
+                return generate_popup(message, "/login")
+        else:
             message = "An error occured. Please double check the form and try again. Please contact us if this continues to happen."
             return generate_popup(message, "/login")
     else:
