@@ -23,6 +23,7 @@ import threading
 
 from flask_sslify import SSLify
 
+
 import json
 import urllib3
 from _datetime import timedelta
@@ -30,21 +31,30 @@ from _datetime import timedelta
 # DECLERATION : As always, spelling and grammar mistakes withing comments are always for your enjoyment.
 # Bought to you by the tip of the Pagoda.
 
+
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 if "DATABASE_URL" in os.environ:
     conn = psycopg2.connect(os.environ["DATABASE_URL"])
+    GMAPS_KEY = os.environ['GMAPS_KEY']
+    TWILIO_KEY = os.environ['TWILIO_KEY']
 else:  # local and backup
-    conn = psycopg2.connect(
-        "postgres: // rognadojzzebyy: c4065a7a22083aa1c7f9e15390c651bd79a4dc246563ef21aae47eccf16658d2@ec2-54-75-84-38.eu-west-1.compute.amazonaws.com: 5432/d7sl752bcn7e0t")
+    from env import connectionString
+    from env import GMAPS_KEY
+    from env import TWILIO_KEY_ACCOUNT_SID
+    from env import TWILIO_KEY_AUTH_TOKEN
+    conn = psycopg2.connect(connectionString)
+
 SQLcursor = conn.cursor()
 
-account_sid = 'AC8dccea54e5befc531e46bb8a02fe61fa'
-auth_token = '386ca0c98d54557cb24a72fb1f8e7784'
+account_sid = TWILIO_KEY_ACCOUNT_SID
+auth_token = TWILIO_KEY_AUTH_TOKEN
 client = Client(account_sid, auth_token)
 
 app = Flask(__name__)
 if "DYNO" in os.environ:
     sslify = SSLify(app)
+
 app.static_folder = "static"
 app.template_folder = "templates"
 
@@ -78,7 +88,7 @@ def copy_to_clip(text, loc):  # Don't use single apostophe
 
 # -------------------------- DB ---------------------------
 
-
+e
 def CreateVerificationToken(UserID):
     SQL = "INSERT INTO public.\"VerificationCode\" (\"UserID\", \"VerificationCode\") VALUES (%s, %s);"
     VerificationCode = random.randint(0, 99999)
@@ -224,6 +234,7 @@ def QRpersonalFunc():
 @app.route('/shopping')
 def shoppingreroute():
     return render_template('shopping.html')
+    
 # ------------------------- BUSINESS --------------------------
 # Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
 
@@ -621,7 +632,7 @@ def midnightRun():
         daynumber = datetime.today().weekday()
         for row in EstabLi:
             url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + \
-                row[0]+"&fields=opening_hours/weekday_text&key=AIzaSyB8CEzbZy17dmq1BS6-mtxZ1KLwo3iRCms"
+                row[0]+"&fields=opening_hours/weekday_text&key=" + GMAPS_KEY
             response = requests.get(url).json()
             if(response.get("result")):
                 Times = response["result"]["opening_hours"]["weekday_text"][daynumber]
