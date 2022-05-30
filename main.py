@@ -13,7 +13,6 @@ from flask import make_response
 from flask import send_from_directory
 from flask import url_for
 from flask import jsonify as jsfy
-from flask_table import Table, Col
 from twilio.rest import Client
 from typing import List
 
@@ -32,24 +31,17 @@ from _datetime import timedelta
 # Bought to you by the tip of the Pagoda.
 
 
-
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-if "DATABASE_URL" in os.environ:
-    conn = psycopg2.connect(os.environ["DATABASE_URL"])
-    GMAPS_KEY = os.environ['GMAPS_KEY']
-    TWILIO_KEY = os.environ['TWILIO_KEY']
-else:  # local and backup
-    from env import connectionString
-    from env import GMAPS_KEY
-    from env import TWILIO_KEY_ACCOUNT_SID
-    from env import TWILIO_KEY_AUTH_TOKEN
-    conn = psycopg2.connect(connectionString)
 
+if "DATABASE_URL" in os.environ:
+    from deployedConfig import *
+else:
+    from localConfig import *
+
+conn = psycopg2.connect(DATABASE_URL)
 SQLcursor = conn.cursor()
 
-account_sid = TWILIO_KEY_ACCOUNT_SID
-auth_token = TWILIO_KEY_AUTH_TOKEN
-client = Client(account_sid, auth_token)
+client = Client(TWILIO_KEY_ACCOUNT_SID, TWILIO_KEY_AUTH_TOKEN)
 
 app = Flask(__name__)
 if "DYNO" in os.environ:
@@ -88,7 +80,7 @@ def copy_to_clip(text, loc):  # Don't use single apostophe
 
 # -------------------------- DB ---------------------------
 
-e
+
 def CreateVerificationToken(UserID):
     SQL = "INSERT INTO public.\"VerificationCode\" (\"UserID\", \"VerificationCode\") VALUES (%s, %s);"
     VerificationCode = random.randint(0, 99999)
@@ -142,12 +134,11 @@ def SendTwilioVerificationCode(VerificationCode, UserID):
         "SELECT \"phoneNumber\" from users WHERE \"userID\" in %(g)s ", params)
     returneddata = SQLcursor.fetchall()
 
-    message = client.messages \
-        .create(
-            body="The Circle Verification message " + str(VerificationCode),
-            messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
-            to=returneddata[0][0]
-        )
+    message = client.messages.create(
+        body="The Circle Verification message " + str(VerificationCode),
+        messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
+        to=returneddata[0][0]
+    )
     print(message.sid)
 
 
@@ -181,17 +172,17 @@ def ChangeUserActivation(UserID):
 
 
 # ------------------------- ACCOUNTS --------------------------
-@app.route('/accounts')
+@ app.route('/accounts')
 def accounts(error=None):
     return render_template("/accounts.html", error=error)
 
 
-@app.route('/signup')
+@ app.route('/signup')
 def signup(error=None):
     return render_template("/account/signup.html", error=error)
 
 
-@app.route('/verify')
+@ app.route('/verify')
 def verify():
     number = None
     if "number" in request.cookies:
@@ -199,20 +190,20 @@ def verify():
     return render_template("/account/verify.html", number=number)
 
 
-@app.route('/login')
+@ app.route('/login')
 def login():
     return render_template("/account/login.html")
 
 
-@app.route("/booking")
+@ app.route("/booking")
 def bCreate():
     return render_template("booking.html")
 
 
-@app.route('/QRPersonal', methods=['GET'])
+@ app.route('/QRPersonal', methods=['GET'])
 def QRpersonalFunc():
     userID = request.cookies["auth"]
-    #userID = 48
+    # userID = 48
     params = {'y': tuple([userID])}
     output = ""
     userName = GetUserName(userID)
@@ -231,40 +222,40 @@ def QRpersonalFunc():
     return jsfy(userName, PhoneNumber, ApptTime, row[2])
 
 
-@app.route('/shopping')
+@ app.route('/shopping')
 def shoppingreroute():
     return render_template('shopping.html')
-    
+
 # ------------------------- BUSINESS --------------------------
 # Plan for busienss, user selcts from a list from google maps. Enters amount of slots theyll take  ,and how  long a slot is. This information then is veriffied. Will spoof verification whilst its a proof of concept
 
 
-@app.route('/business/signup')
+@ app.route('/business/signup')
 def bLogin():
     return render_template("business/signup.html")
 
 
-@app.route('/business/login')
+@ app.route('/business/login')
 def bSignup():
     return render_template("business/login.html")
 
 
-@app.route('/business/dashboard')
+@ app.route('/business/dashboard')
 def bDashboard():
     return render_template("business/dashboard.html")
 
 
-@app.route('/business/qr')
+@ app.route('/business/qr')
 def bScanner():
     return render_template("business/qrScanner.html")
 
 
-@app.route('/business/livechat')
+@ app.route('/business/livechat')
 def bLivechat():
     return render_template("about.html")
 
 
-@app.route('/business/tabledata', methods=['POST'])
+@ app.route('/business/tabledata', methods=['POST'])
 def TableData():
     output = ""
     # this is to be changed to the cookie one, just to make it work atm.
@@ -298,7 +289,7 @@ def TableData():
 # ------------------------- API
 
 
-@app.route('/api/fetchplaces', methods=["GET"])
+@ app.route('/api/fetchplaces', methods=["GET"])
 def returnPlaces():
 
     ArrayOfPlaceID = []
@@ -310,7 +301,7 @@ def returnPlaces():
     return jsfy(ArrayOfPlaceID)
 
 
-@app.route('/api/business/signup', methods=["POST"])
+@ app.route('/api/business/signup', methods=["POST"])
 def businessSignup():
     Output = request.form.to_dict()
 
@@ -342,7 +333,7 @@ def businessSignup():
     return generate_popup("Your business has been successfully added! You will be taken to the login page", "/business/login")
 
 
-@app.route('/api/business/login', methods=["POST"])
+@ app.route('/api/business/login', methods=["POST"])
 def businessLogin():
 
     UniqueID = request.form["spanname"]
@@ -367,7 +358,7 @@ def businessLogin():
     return generate_popup("Your details were incorrect", "/business/login")
 
 
-@app.route('/api/signup', methods=["POST"])
+@ app.route('/api/signup', methods=["POST"])
 def signupAPI():
     print(type(request))
     if 'signupCheck' in request.cookies:
@@ -410,7 +401,7 @@ def signupAPI():
     return resp
 
 
-@app.route('/api/verify', methods=["POST"])
+@ app.route('/api/verify', methods=["POST"])
 def verifyAPI():
     print(request.cookies)
     if 'signupCheck' in request.cookies and 'code' in request.form:
@@ -443,7 +434,7 @@ def verifyAPI():
         return redirect("/signup")
 
 
-@app.route('/api/requestbusiness', methods=["POST"])
+@ app.route('/api/requestbusiness', methods=["POST"])
 def AddNewShopRequest():
 
     if "shopID" in request.form:
@@ -456,7 +447,7 @@ def AddNewShopRequest():
     return "s"
 
 
-@app.route('/api/getstores', methods=["POST"])
+@ app.route('/api/getstores', methods=["POST"])
 def ReturnMatches():
     LocalBusinessess = []
     Offers = []
@@ -493,11 +484,11 @@ def ReturnMatches():
             # append the offers
             TotalReturn.append(
                 str(row[0])+":@:"+str(row[1])+":@:"+str(row[2])+":@:"+str(row[3]))
-        #params["offers"] = Offers
+        # params["offers"] = Offers
         FutileCount = FutileCount+1
     if len(Offers) > 0:
         print("")
-        #SQLcursor.execute("UPDATE \"Appointments\" SET \"userID\" = "+userID+" WHERE \"appointmentID\" IN" + str(tuple(Offers)))
+        # SQLcursor.execute("UPDATE \"Appointments\" SET \"userID\" = "+userID+" WHERE \"appointmentID\" IN" + str(tuple(Offers)))
     conn.commit()
 
     return jsfy(TotalReturn)
@@ -516,7 +507,7 @@ def BookSlot():
     # rememeber to send off the text message
     message = client.messages \
         .create(
-            body="The Circle Booking Message . You have a booking,details to be viewed at https://thecircle.digital/booking",
+            body="The Circle Booking Message. You have a booking,details to be viewed at https://thecircle.digital/booking",
             messaging_service_sid='MG22697d1c5c9106d907824433d89fe010',
             to=returneddata[0][0]
         )
@@ -668,5 +659,5 @@ if __name__ == '__main__':
 
     t = threading.Thread(target=midnightRun)
     t.start()
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 80))
     app.run(host='0.0.0.0', port=port, debug=debug)
