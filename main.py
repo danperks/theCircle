@@ -155,6 +155,8 @@ def CheckVerificationCode(CodeToCheck):  # returns true false and user id
         return (truefalse, row[0])
         break
 
+    
+
 
 def RemoveVerificationCode(UserID):
     params = {'g': tuple([UserID])}
@@ -664,5 +666,5 @@ if __name__ == '__main__':
 
     t = threading.Thread(target=midnightRun)
     t.start()
-    port = int(os.environ.get("PORT", 80))
+    port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=debug)
